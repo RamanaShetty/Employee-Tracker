@@ -1,0 +1,30 @@
+const express = require('express');
+const siteAdminRouter = express.Router();
+const siteAdminServices = require('../services/siteadmin');
+const adminServices = require('../services/admin');
+const dailyRecordService = require('../services/update-daily-record');
+const progressUpload = require('../middlewares/progress-uploads');
+const isAuth = require('../middlewares/isAuth');
+const admins = ["siteAdmin", "superAdmin"];
+const siteAdmin = ["siteAdmin"];
+
+siteAdminRouter.get('/employee',/* isAuth(admins)*/ adminServices.getEmployees);
+siteAdminRouter.get('/employee/role/:role', /* isAuth(admins)*/  adminServices.getEmployeeByRole);
+siteAdminRouter.get('/employee/status/:status', /* isAuth(admins)*/  adminServices.getEmployeeStatus);
+siteAdminRouter.get('/sites/admin/:employeeId', /* isAuth(admins)*/  adminServices.getSitesBySiteAdminId);
+siteAdminRouter.get('/site/id/:siteId', /* isAuth(admins)*/ adminServices.getSiteBySiteId);
+siteAdminRouter.post('/dailyrecord', /* isAuth(admins)*/ adminServices.addDailyRecord);
+siteAdminRouter.put('/dailyrecord/:dailyRecordId',/* isAuth(admins)*/  dailyRecordService.updateDailyRecord);
+siteAdminRouter.get('/dailyrecord/lastassigned/:employeeId', /* isAuth(admins)*/  adminServices.getLastAssignedWoryByEmployeeId);
+siteAdminRouter.get('/dailyrecord/site/all/:siteId',/* isAuth(admins)*/  siteAdminServices.getAllDailyRecordsBySite);
+siteAdminRouter.get('/dailyrecord/site/now/:siteId', /* isAuth(admins)*/ siteAdminServices.getTodayDailyRecordsBySite);
+siteAdminRouter.post('/progressimage',/* isAuth(admins)*/ progressUpload.array('photo', 12), adminServices.addProgressImage);
+siteAdminRouter.get('/progressimage/:siteId',/* isAuth(admins)*/  adminServices.getProgressBySite);
+siteAdminRouter.put('/progressimage/:progressId',/* isAuth(admins)*/  progressUpload.single('photo'), adminServices.updateProgressImage);
+siteAdminRouter.delete('/progressimage/:progressId', /* isAuth(admins)*/  adminServices.deleteProgressImage);
+siteAdminRouter.get('/log', /* isAuth(admins)*/ adminServices.getAllLogs);
+siteAdminRouter.get('/log/operation/:operation', /* isAuth(admins)*/  adminServices.getLogsByOperation);
+siteAdminRouter.get('/log/modifier/:modifierId',/* isAuth(admins)*/ adminServices.getLogsByModifierId);
+siteAdminRouter.get('/log/date/:date', /* isAuth(admins)*/  adminServices.getLogsByDate);
+
+module.exports = siteAdminRouter;

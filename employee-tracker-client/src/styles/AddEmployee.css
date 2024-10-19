@@ -1,0 +1,32 @@
+.add-employee-modal{
+    display: flex;
+    flex-direction: column;
+}
+.add-employee-form{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+.css-1jcfcth{
+    display: flex;
+    flex-direction: column;
+    gap:5px;
+}
+.add-employee-formData input{
+    width: 200px;
+    height: 15px;
+    text-align: start;
+    align-items: center;
+}
+.add-employee-profile .css-1jcfcth{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap:15px;
+}
+.modal-content .MuiBox-root{
+    border-radius: 10px;
+    background-color: #fff;
+    border: none;
+}

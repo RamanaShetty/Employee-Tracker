@@ -53,19 +53,3 @@
   text-align: left;
   border-bottom: 1px solid #ddd;
 }
-
-.status-completed {
-  color: green;
-}
-
-.status-pending {
-  color: orange;
-}
-
-.status-incomplete {
-  color: red;
-}
-
-.status-onhold {
-  color: gray;
-}
