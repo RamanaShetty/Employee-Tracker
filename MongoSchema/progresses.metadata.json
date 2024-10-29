@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"},{"v":{"$numberInt":"2"},"key":{"imageUrl":{"$numberInt":"1"}},"name":"imageUrl_1","background":true,"unique":true}],"uuid":"b7de82fc4bdb44e9a0a4c55215be7320","collectionName":"progresses","type":"collection"}

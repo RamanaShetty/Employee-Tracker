@@ -1,0 +1,217 @@
+/* LoginPage.css */
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+    background-color: #f9f9f9;
+}
+
+.login-container button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.login-container button:hover {
+    background-color: #0056b3;
+}
+
+.login-container form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 300px;
+    background-color: #fff;
+    padding: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.login-container .input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.login-container .input:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+.login-container button[type="submit"] {
+    background-color: blue;
+    color: white;
+    font-size: 18px;
+    padding: 10px 20px;
+    margin-top: 20px;
+}
+
+.login-container button[type="submit"]:hover {
+    background-color: rgb(32, 32, 192);
+}
+
+.login-container div {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.login-container div button {
+    background-color: #6c757d;
+}
+
+.login-container div button:hover {
+    background-color: #5a6268;
+}
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+}
+
+.input {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.input:focus{
+    transition: transform 0.4s ease-in-out;
+    transform: scale(1.04);
+    outline: none;
+    border: 1px solid blue;
+}
+.radiogroup:hover {
+    transition: transform 0.4s ease;
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.role-selection {
+    margin: 10px 0;
+}
+
+.role-selection label {
+    display: block;
+    margin: 5px 0;
+    cursor: pointer;
+}
+.pagehead {
+    font-size: 24px;
+    color: #fff;
+    text-align: center;
+    background-color: blue;
+    padding: 8px;
+    border-radius: 8px;
+    margin-left: 10px;
+    margin-right:10px ;
+}
+#logintext{
+    font-weight: bold;
+    font-size: 25px;
+}
+.main-login{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.loginStatus{
+    color: red;
+}
+.add-site-container,.add-siteadmin-container,.add-superadmin-container ,.modal-content,.login-container,
+.profile-view{
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+  .add-site-container,
+.add-siteadmin-container,
+.view-siteadmins-container ,
+.add-superadmin-container,
+.modal-content,
+.login-container,
+.profile-view{
+  background: linear-gradient(135deg, #fff 0%); /* Gradient background */
+  padding: 40px;
+  border-radius: 20px; /* Rounded corners */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  max-width: 500px; /* Max width */
+  margin: 50px auto; /* Center the container */
+  animation: fadeIn 0.4s ease-out; /* Fade-in effect */
+}
+.form-title {
+    text-align: center;
+    color: #000; /* Text color */
+    font-size: 22px; /* Increased font size */
+    margin-bottom: 30px; /* Space below */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
+    /* Position for the underline effect */
+  }
+  
+  .form-title::after {
+    content: '';
+    display: block;
+    width: 60px; /* Underline width */
+    height: 4px; /* Underline height */
+    background: #000; /* Underline color */
+    margin: 10px auto; /* Center the underline */
+    border-radius: 2px; /* Rounded edges */
+  }
+  
+  /* Form Styles */
+  .form {
+    display: flex; /* Flexbox layout */
+    flex-direction: column; /* Column layout */
+    align-items: center;
+    justify-content: center;
+  }
+  
+/* Input and Select Field Styles */
+.input-field,.select-field{
+    width: 100%; /* Full width */
+    padding: 15px; /* Padding inside inputs */
+    margin-bottom: 15px; /* Space between inputs */
+    border: 1px solid rgb(117, 117, 117); /* Border color */
+    border-radius: 10px; /* Rounded corners */
+    font-size: 16px; /* Font size */
+    background: rgba(255, 255, 255, 0.8); /* Light background */
+    transition: transform 0.4s ease, box-shadow 0.3s ease; /* Smooth transition */
+    outline: none; /* Remove default outline */
+  }
+  /* Input focus effect */
+  .input-field:focus, .select-field:focus {
+    border-color: #2e69f2; /* Darker shade on focus */
+    box-shadow: 0 0 8px rgba(39, 139, 246, 0.5); /* Glow effect */
+    transform: scale(1.05);
+  }
+  .login-container{
+    background-color: rgb(249, 252, 253);
+  }
