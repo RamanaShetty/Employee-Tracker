@@ -43,8 +43,6 @@ interface Employee {
 }
 
 const Employees = () => {
-  const classes = useStyles();
-
   const [technicians, setTechnicain] = useState<Employee[]>([]);
   const [admins, setAdmins] = useState<Employee[]>([]);
   const [isTechnicians, setIsTechnicians] = useState(true);
