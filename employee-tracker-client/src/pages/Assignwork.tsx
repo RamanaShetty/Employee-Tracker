@@ -484,13 +484,13 @@ const Assignwork = () => {
                 <TableCell className={classes.tableCell}> 
                   <DropDown dailyRecordsId={record.dailyRecordsId} /> 
                   </TableCell>
-                <TableCell className={`${classes.tableCell} ${record.status === "completed"
+                <TableCell className={`${classes.tableCell} ${record.status === "Completed"
                     ? classes.statusCompleted
-                    : record.status === "incomplete"
+                    : record.status === "Incomplete"
                       ? classes.statusIncomplete
-                      : record.status === "onHold"
+                      : record.status === "OnHold"
                         ? classes.statusOnHold
-                        : record.status === "pending"
+                        : record.status === "Pending"
                           ? classes.statusPending
                           : ""
                   }`}>

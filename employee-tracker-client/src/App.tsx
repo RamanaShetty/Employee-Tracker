@@ -8,10 +8,12 @@ import {
 import Sidebar from "./components/Sidebar";
 import TopNavbar from "./components/TopNavbar";
 import Employees from "./pages/Employees";
-import Sites from "./pages/Sites";
+// import Sites from "./pages/Sites";
 import Login from "./pages/Login";
 import Assignwork from "./pages/Assignwork";
 import "./App.css";
+import Empsite from "./pages/empsite";
+import Sites from "./pages/Employees";
 
 const AppContent: React.FC = () => {
   const location = useLocation();
@@ -27,6 +29,7 @@ const AppContent: React.FC = () => {
           <Route path="/" element={<Login />} />
           <Route path="/employees" element={<Employees />} />
           <Route path="/sites" element={<Sites />} />
+          <Route path="/assign-site" element={<Empsite />} />
           <Route path="/assign-work" element={<Assignwork />} />
         </Routes>
       </div>
@@ -39,6 +42,9 @@ const App: React.FC = () => {
     <Router>
       <AppContent />
     </Router>
+    
+    
+   
   );
 };
 

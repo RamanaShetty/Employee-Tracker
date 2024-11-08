@@ -12,105 +12,25 @@ import {
   Tabs,
   Tab,
   InputBase,
+  Button,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { makeStyles } from "@mui/styles";
+import AddIcon from "@mui/icons-material/Add";
 
-const useStyles = makeStyles({
-  table: {
-    minWidth: 650,
-  },
-  tableCell: {
-    padding: "18px 16px",
-    fontSize: "18px",
-    fontWeight: "bold",
-    borderBottom: "1px solid #ddd",
-    color: "#344054 !important",
-  },
-  tableHead: {
-    backgroundColor: "#f5f5f5",
-  },
-  statusCompleted: {
-    backgroundColor: "#4E8729", // Green background
-    color: "#fff",
-    padding: "4px 8px",
-    borderRadius: "4px",
-  },
-  statusIncomplete: {
-    backgroundColor: "#A16207", // Yellow background
-    color: "#fff",
-    padding: "4px 8px",
-    borderRadius: "4px",
-  },
-  statusOnHold: {
-    backgroundColor: "#1A1A1A", // Dark primary color background
-    color: "#fff",
-    padding: "4px 8px",
-    borderRadius: "4px",
-  },
-  statusPending: {
-    backgroundColor: "#FFF3ED", // Dark orange background
-    color: "#1A1A1A",
-    padding: "4px 8px",
-    borderRadius: "4px",
-  },
-  topNav: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: "16px",
-    backgroundColor: "#fff",
-    borderBottom: "1px solid #ddd",
-  },
-  tabsContainer: {
-    display: "inline-flex",
-    border: "1px solid #D0D5DD !important", // light border color for outline
-    borderRadius: "8px", // rounded corners
-    overflow: "hidden", // keeps rounded corners intact
-  },
-  tab: {
-    fontSize: "14px",
-    fontWeight: "bold",
-    minWidth: "auto",
-    padding: "8px 16px",
-    color: "#D0D5DD !important", // gray color for unselected tab text
-    textTransform: "none",
-    "&.Mui-selected": {
-      color: "#667085 !important", // dark color for selected tab text
-      backgroundColor: "#f4f6f8", // light background for selected tab
-      fontWeight: "bold",
-    },
-    "&:not(.Mui-selected)": {
-      backgroundColor: "#fff", // background color for unselected tabs
-    },
-    "&:not(:last-child)": {
-      borderRight: "1px solid #D0D5DD", // Adds the border between tabs
-    },
-  },
-  searchContainer: {
-    display: "flex",
-    alignItems: "center",
-    border: "1px solid #ddd",
-    borderRadius: "4px",
-    padding: "4px 8px",
-    backgroundColor: "#fff",
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: "14px",
-    marginLeft: "8px",
-    "&::placeholder": {
-      color: "#999",
-    },
-  },
-  searchIcon: {
-    color: "#999",
-  },
-  activeTab: {
-    fontWeight: "bold",
-    color: "#007BFF",
-  },
-});
+import {
+  tableStyles,
+  tableHeaderStyles,
+  tableBodyStyles,
+  tableHeadStyles,
+  statusStyles,
+  topNavStyles,
+  tabsContainerStyles,
+  tabStyles,
+  searchContainerStyles,
+  searchInputStyles,
+  addButtonStyles,
+  addButtonIconStyles,
+} from "../styles/employeeStyles";
 
 interface Employee {
   _id: string;
@@ -202,79 +122,88 @@ const Employees = () => {
 
   return (
     <Box>
-      <Box className={classes.topNav}>
+      <Box sx={topNavStyles}>
         <Tabs
           value={value}
           onChange={handleChange}
-          className={classes.tabsContainer}
+          sx={tabsContainerStyles}
           TabIndicatorProps={{
             style: {
               display: "none",
             },
           }}
         >
-          <Tab
-            label="Technicians"
-            className={`${classes.tab} ${value === 0 ? classes.activeTab : ""}`}
-          />
-          <Tab
-            label="Admins"
-            className={`${classes.tab} ${value === 1 ? classes.activeTab : ""}`}
-          />
+          <Tab label="Technicians" sx={tabStyles} />
+          <Tab label="Admins" sx={tabStyles} />
         </Tabs>
-        <Box className={classes.searchContainer}>
-          <InputBase placeholder="Search..." className={classes.searchInput} />
-          <SearchIcon />
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Button
+            onClick={openModal}
+            sx={addButtonStyles}
+            startIcon={<AddIcon sx={addButtonIconStyles} />}
+          >
+            Employee
+          </Button>
+          <Box sx={searchContainerStyles}>
+            <InputBase placeholder="Search..." sx={searchInputStyles} />
+            <SearchIcon />
+          </Box>
         </Box>
       </Box>
       <TableContainer component={Paper}>
-        <Table className={classes.table}>
-          <TableHead className={classes.tableHead}>
+        <Table sx={tableStyles}>
+          <TableHead sx={tableHeadStyles}>
             <TableRow>
-              <TableCell className={classes.tableCell}>Name</TableCell>
-              <TableCell className={classes.tableCell}>Skill</TableCell>
-              <TableCell className={classes.tableCell}>Mobile Number</TableCell>
-              <TableCell className={classes.tableCell}>
-                Last assigned task
+              <TableCell sx={tableHeaderStyles}>Name</TableCell>
+              <TableCell sx={tableHeaderStyles}>Skill</TableCell>
+              <TableCell sx={tableHeaderStyles}>Mobile Number</TableCell>
+              <TableCell sx={tableHeaderStyles}>Last assigned task</TableCell>
+              <TableCell
+                sx={{
+                  ...tableHeaderStyles,
+                  textAlign: "center",
+                  verticalAlign: "middle",
+                }}
+              >
+                Status
               </TableCell>
-              <TableCell className={classes.tableCell}>Status</TableCell>
-              <TableCell className={classes.tableCell}>Action</TableCell>
+              <TableCell sx={tableHeaderStyles}>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {technicians.map((worker, index) => (
               <TableRow key={index}>
                 <TableCell
-                  className={classes.tableCell}
-                  sx={{ fontWeight: "bold" }}
+                  sx={{
+                    ...tableBodyStyles,
+                    fontWeight: "900",
+                    color: "#101828",
+                  }}
                 >
                   {worker.name}
                 </TableCell>
-                <TableCell className={classes.tableCell}>
-                  {worker.skill}
-                </TableCell>
-                <TableCell className={classes.tableCell}>
-                  {worker.mobile}
-                </TableCell>
-                <TableCell className={classes.tableCell}>
-                  Something was Assign
-                </TableCell>
+                <TableCell sx={tableBodyStyles}>{worker.skill}</TableCell>
+                <TableCell sx={tableBodyStyles}>{worker.mobile}</TableCell>
+                <TableCell sx={tableBodyStyles}>Something was Assign</TableCell>
                 <TableCell
-                  className={`${classes.tableCell} ${
-                    worker.status === "Completed"
-                      ? classes.statusCompleted
+                  sx={{
+                    ...tableBodyStyles,
+                    ...(worker.status === "Completed"
+                      ? statusStyles.completed
                       : worker.status === "Incomplete"
-                      ? classes.statusIncomplete
-                      : worker.status === "OnHold"
-                      ? classes.statusOnHold
+                      ? statusStyles.incomplete
+                      : worker.status === "onHold"
+                      ? statusStyles.onHold
                       : worker.status === "Pending"
-                      ? classes.statusPending
-                      : ""
-                  }`}
+                      ? statusStyles.pending
+                      : {}),
+                    textAlign: "center",
+                    verticalAlign: "middle",
+                  }}
                 >
                   {worker.status}
                 </TableCell>
-                <TableCell className={classes.tableCell}>
+                <TableCell sx={tableBodyStyles}>
                   {/* Add your action components here */}
                 </TableCell>
               </TableRow>
