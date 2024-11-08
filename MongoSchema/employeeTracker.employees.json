@@ -1,0 +1,64 @@
+[{
+  "_id": {
+    "$oid": "6720faec64b0943fe57bc2c9"
+  },
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "password": "john123",
+  "mobile": "1234567890",
+  "role": "superAdmin",
+  "skill": "networking",
+  "status": "completed",
+  "profilePhoto": {
+    "imageUrl": "https://example.com/profiles/john.jpg"
+  },
+  "activeStatus": 1
+},
+{
+  "_id": {
+    "$oid": "6720fb0264b0943fe57bc2cb"
+  },
+  "name": "Alice Smith",
+  "email": "alice.smith@example.com",
+  "password": "alice123",
+  "mobile": "0987654321",
+  "role": "siteAdmin",
+  "skill": "cloud management",
+  "status": "pending",
+  "profilePhoto": {
+    "imageUrl": "https://example.com/profiles/alice.jpg"
+  },
+  "activeStatus": 1
+},
+{
+  "_id": {
+    "$oid": "6720fb1464b0943fe57bc2cd"
+  },
+  "name": "Robert Johnson",
+  "email": "robert.johnson@example.com",
+  "password": "robert123",
+  "mobile": "1122334455",
+  "role": "technician",
+  "skill": "hardware repair",
+  "status": "Completed",
+  "profilePhoto": {
+    "imageUrl": "https://example.com/profiles/robert.jpg"
+  },
+  "activeStatus": 1
+},
+{
+  "_id": {
+    "$oid": "6720fb2464b0943fe57bc2cf"
+  },
+  "name": "Emily Brown",
+  "email": "emily.brown@example.com",
+  "password": "emily123",
+  "mobile": "5566778899",
+  "role": "technician",
+  "skill": "software support",
+  "status": "incomplete",
+  "profilePhoto": {
+    "imageUrl": "https://example.com/profiles/emily.jpg"
+  },
+  "activeStatus": 0
+}]
