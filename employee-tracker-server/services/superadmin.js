@@ -230,7 +230,7 @@ exports.removeSite = async (req, res) => {
 exports.getAllDailyRecords = async (req, res) => {
     try {
         const results = await dailyRecordModel.find({});
-        await setCheckinImagesIfExist(results);
+        // await setCheckinImagesIfExist(results);
         res.status(200).json(results);
     }
     catch(error) {

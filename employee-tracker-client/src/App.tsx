@@ -10,6 +10,7 @@ import TopNavbar from "./components/TopNavbar";
 import Employees from "./pages/Employees";
 import Sites from "./pages/Sites";
 import Login from "./pages/Login";
+import Assignwork from "./pages/Assignwork";
 import "./App.css";
 
 const AppContent: React.FC = () => {
@@ -26,6 +27,7 @@ const AppContent: React.FC = () => {
           <Route path="/" element={<Login />} />
           <Route path="/employees" element={<Employees />} />
           <Route path="/sites" element={<Sites />} />
+          <Route path="/assign-work" element={<Assignwork />} />
         </Routes>
       </div>
     </div>

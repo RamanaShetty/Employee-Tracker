@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/addemployee.tsx","./src/components/sidebar.tsx","./src/components/topnavbar.tsx","./src/pages/employees.tsx","./src/pages/login.tsx","./src/pages/sites.tsx","./src/services/authservices.tsx"],"errors":true,"version":"5.6.3"}

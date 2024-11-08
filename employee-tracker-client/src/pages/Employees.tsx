@@ -122,7 +122,7 @@ interface Employee {
   status: string;
 }
 
-const Sites = () => {
+const Employees = () => {
   const classes = useStyles();
 
   const [technicians, setTechnicain] = useState<Employee[]>([]);
@@ -286,4 +286,4 @@ const Sites = () => {
   );
 };
 
-export default Sites;
+export default Employees;
