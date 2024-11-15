@@ -32,6 +32,8 @@ import {
   addButtonIconStyles,
 } from "../styles/employeeStyles";
 
+import AddEmployeeModal from "../components/AddEmployee";
+
 interface Employee {
   _id: string;
   name: string;
@@ -43,11 +45,11 @@ interface Employee {
 }
 
 const Employees = () => {
-  const [technicians, setTechnicain] = useState<Employee[]>([]);
+  const [technicians, setTechnicians] = useState<Employee[]>([]);
   const [admins, setAdmins] = useState<Employee[]>([]);
   const [isTechnicians, setIsTechnicians] = useState(true);
   const [skillFilter, setSkillFilter] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
   const [value, setValue] = useState(0);
 
   useEffect(() => {
@@ -60,7 +62,7 @@ const Employees = () => {
       .then((response) => {
         if (Array.isArray(response.data)) {
           const allEmployees = response.data;
-          setTechnicain(
+          setTechnicians(
             allEmployees
               .filter((emp) => emp.role === "technician")
               .sort((a, b) => a.name.localeCompare(b.name))
@@ -72,13 +74,13 @@ const Employees = () => {
           );
         } else {
           console.error("Expected an array but received:", response.data);
-          setTechnicain([]);
+          setTechnicians([]);
           setAdmins([]);
         }
       })
       .catch((error) => {
         console.error("Error fetching employees:", error);
-        setTechnicain([]);
+        setTechnicians([]);
         setAdmins([]);
       });
   };
@@ -93,12 +95,10 @@ const Employees = () => {
   };
 
   const handleTechnician = (): void => {
-    alert("Technicions");
     setIsTechnicians(true);
   };
 
   const handleAdmin = (): void => {
-    alert("Admins");
     setIsTechnicians(false);
   };
 
@@ -135,6 +135,7 @@ const Employees = () => {
           <Tab label="Admins" sx={tabStyles} />
         </Tabs>
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          {/* Open modal on click */}
           <Button
             onClick={openModal}
             sx={addButtonStyles}
@@ -143,11 +144,18 @@ const Employees = () => {
             Employee
           </Button>
           <Box sx={searchContainerStyles}>
-            <InputBase placeholder="Search..." sx={searchInputStyles} />
+            <InputBase
+              placeholder="Search..."
+              sx={searchInputStyles}
+              value={skillFilter}
+              onChange={(e) => setSkillFilter(e.target.value)}
+            />
             <SearchIcon />
           </Box>
         </Box>
       </Box>
+
+      {/* Table for displaying employees */}
       <TableContainer component={Paper}>
         <Table sx={tableStyles}>
           <TableHead sx={tableHeadStyles}>
@@ -169,46 +177,51 @@ const Employees = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {technicians.map((worker, index) => (
-              <TableRow key={index}>
-                <TableCell
-                  sx={{
-                    ...tableBodyStyles,
-                    fontWeight: "900",
-                    color: "#101828",
-                  }}
-                >
-                  {worker.name}
-                </TableCell>
-                <TableCell sx={tableBodyStyles}>{worker.skill}</TableCell>
-                <TableCell sx={tableBodyStyles}>{worker.mobile}</TableCell>
-                <TableCell sx={tableBodyStyles}>Something was Assign</TableCell>
-                <TableCell
-                  sx={{
-                    ...tableBodyStyles,
-                    ...(worker.status === "Completed"
-                      ? statusStyles.completed
-                      : worker.status === "Incomplete"
-                      ? statusStyles.incomplete
-                      : worker.status === "onHold"
-                      ? statusStyles.onHold
-                      : worker.status === "Pending"
-                      ? statusStyles.pending
-                      : {}),
-                    textAlign: "center",
-                    verticalAlign: "middle",
-                  }}
-                >
-                  {worker.status}
-                </TableCell>
-                <TableCell sx={tableBodyStyles}>
-                  {/* Add your action components here */}
-                </TableCell>
-              </TableRow>
-            ))}
+            {(isTechnicians ? filteredTechnicians : filteredAdmins).map(
+              (worker, index) => (
+                <TableRow key={index}>
+                  <TableCell
+                    sx={{
+                      ...tableBodyStyles,
+                      fontWeight: "900",
+                      color: "#101828",
+                    }}
+                  >
+                    {worker.name}
+                  </TableCell>
+                  <TableCell sx={tableBodyStyles}>{worker.skill}</TableCell>
+                  <TableCell sx={tableBodyStyles}>{worker.mobile}</TableCell>
+                  <TableCell sx={tableBodyStyles}>Assigned Task</TableCell>
+                  <TableCell
+                    sx={{
+                      ...tableBodyStyles,
+                      ...(worker.status === "Completed"
+                        ? statusStyles.completed
+                        : worker.status === "Incomplete"
+                        ? statusStyles.incomplete
+                        : worker.status === "onHold"
+                        ? statusStyles.onHold
+                        : worker.status === "Pending"
+                        ? statusStyles.pending
+                        : {}),
+                      textAlign: "center",
+                      verticalAlign: "middle",
+                    }}
+                  >
+                    {worker.status}
+                  </TableCell>
+                  <TableCell sx={tableBodyStyles}>
+                    {/* Add your action components here */}
+                  </TableCell>
+                </TableRow>
+              )
+            )}
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/* Add Employee Modal */}
+      <AddEmployeeModal open={isModalOpen} handleClose={closeModal} />
     </Box>
   );
 };

@@ -1,200 +1,265 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent } from "react";
 import {
-    Modal,
-    Box,
-    Typography,
-    TextField,
-    Button,
-    Avatar,
-    Select,
-    MenuItem,
-    InputLabel,
-    FormControl,
-} from '@mui/material';
-import '../styles/AddEmployee.css';
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  Button,
+  Box,
+  IconButton,
+  styled,
+} from "@mui/material";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
-interface ServerModalProps {
-    open: boolean;
-    handleClose: () => void;
+interface AddEmployeeModalProps {
+  open: boolean;
+  handleClose: () => void;
 }
 
-const ServerModal: React.FC<ServerModalProps> = ({ open, handleClose }) => {
-    const [employeeName, setEmployeeName] = useState<string>('');
-    const [skillName, setSkillName] = useState<string>('');
-    const [mobileNumber, setMobileNumber] = useState<string>('');
-    const [email, setEmail] = useState<string>('');
-    const [role, setRole] = useState<string>('technician');
-    const [image, setImage] = useState<string | ArrayBuffer | null>(null);
+interface EmployeeData {
+  name: string;
+  skillName: string;
+  mobileNumber: string;
+  photo: File | null;
+}
 
-    // Handle image file input and convert to base64
-    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImage(reader.result);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
+const VisuallyHiddenInput = styled("input")`
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  white-space: nowrap;
+  width: 1px;
+`;
 
-    // Handle form submission and send data to backend
-    const handleAddEmployee = async () => {
-        // Validate inputs
-        if (!employeeName || !skillName || !mobileNumber || !email || !role) {
-            alert('Please fill in all fields.');
-            return;
-        }
+const ImagePreviewBox = styled(Box)`
+  width: 160px; // Increased width
+  height: 160px; // Increased height
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+`;
 
-        // Create the form data object to send (with employee details and image)
-        const formData = new FormData();
-        formData.append('employeeName', employeeName);
-        formData.append('email', email);
-        formData.append('mobileNumber', mobileNumber);
-        formData.append('role', role);
-        formData.append('skillName', skillName);
-        if (image) {
-            formData.append('image', image as string); // Assuming `image` is a base64 string
-        }
+const BlurredDialog = styled(Dialog)`
+  & .MuiBackdrop-root {
+    backdrop-filter: blur(5px);
+    background-color: rgba(0, 0, 0, 0.5);
+  }
 
-        try {
+  & .MuiDialog-paper {
+    box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.08);
+  }
 
-            const response = await fetch('http://localhost:4200/employee', {
-                method: 'POST',
-                body: formData, // Sends the form data (including the image)
-            });
+  & .MuiInputBase-root {
+    height: 44px;
+  }
 
-            // Handle response
-            if (!response.ok) {
-                throw new Error('Failed to add employee');
-            }
+  & .MuiInputLabel-root {
+    transform: translate(14px, 12px) scale(1);
+    &.Mui-focused,
+    &.MuiFormLabel-filled {
+      transform: translate(14px, -9px) scale(0.75);
+    }
+  }
+`;
 
-            const result = await response.json();
-            console.log('Employee added successfully:', result);
+const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
+  open,
+  handleClose,
+}) => {
+  const [employeeData, setEmployeeData] = useState<EmployeeData>({
+    name: "",
+    skillName: "",
+    mobileNumber: "",
+    photo: null,
+  });
+  const [previewUrl, setPreviewUrl] = useState<string>("");
 
-            // Reset the form
-            setEmployeeName('');
-            setSkillName('');
-            setMobileNumber('');
-            setEmail('');
-            setRole('technician');
-            setImage(null);
+  const onSubmit = (employees: EmployeeData) => {
+    console.log(employees);
+  };
 
-            // Close the modal
-            handleClose();
-        } catch (error) {
-            console.error('Error adding employee:', error);
-            alert('Error adding employee. Please try again.');
-        }
-    };
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setEmployeeData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
-    return (
-        <Modal
-            className='add-employee-modal'
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-title"
-            aria-describedby="modal-description"
+  const handlePhotoUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setEmployeeData((prev) => ({
+        ...prev,
+        photo: file,
+      }));
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
+  const handleSubmit = () => {
+    onSubmit(employeeData);
+    handleClose();
+  };
+
+  return (
+    <BlurredDialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+      <Box
+        sx={{
+          padding: "24px",
+          display: "flex",
+          flexDirection: "column",
+          rowGap: 2,
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
         >
-            <div className='modal-content'>
-                <Box
-                    sx={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        width: 400,
-                        bgcolor: 'background.paper',
-                        border: '2px solid #000',
-                        boxShadow: 24,
-                        p: 4,
+          <DialogTitle sx={{ padding: 0, fontWeight: "600" }}>
+            Add Employee
+          </DialogTitle>
+          <Box
+            sx={{
+              display: "flex",
+              columnGap: 3,
+            }}
+          >
+            <Box sx={{ flex: 1 }}>
+              <TextField
+                fullWidth
+                name="name"
+                label="Employee Name"
+                autoComplete="none"
+                value={employeeData.name}
+                onChange={handleInputChange}
+                sx={{ marginBottom: "20px" }}
+              />
+              <TextField
+                fullWidth
+                name="skillName"
+                label="Skill Name"
+                autoComplete="none"
+                value={employeeData.skillName}
+                onChange={handleInputChange}
+                sx={{ marginBottom: "20px" }}
+              />
+              <TextField
+                fullWidth
+                name="mobileNumber"
+                label="Mobile Number"
+                autoComplete="none"
+                value={employeeData.mobileNumber}
+                onChange={handleInputChange}
+              />
+            </Box>
+
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                minWidth: "160px",
+              }}
+            >
+              <ImagePreviewBox>
+                {previewUrl ? (
+                  <img
+                    src={previewUrl}
+                    alt="Preview"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
                     }}
+                  />
+                ) : (
+                  <IconButton
+                    component="label"
+                    sx={{
+                      width: "48px",
+                      height: "48px",
+                    }}
+                  >
+                    <CloudUploadIcon sx={{ width: "24px", height: "24px" }} />
+                    <VisuallyHiddenInput
+                      type="file"
+                      accept="image/*"
+                      onChange={handlePhotoUpload}
+                    />
+                  </IconButton>
+                )}
+              </ImagePreviewBox>
+              <Box
+                sx={{
+                  padding: "8px 12px",
+                  textAlign: "center",
+                }}
+              >
+                <Box
+                  sx={{
+                    typography: "caption",
+                    color: "#344054",
+                    fontWeight: 500,
+                    marginBottom: "4px",
+                  }}
                 >
-                    <Typography variant="h6" component="h2" gutterBottom>
-                        Add Employee
-                    </Typography>
-                    <div className='add-employee-form'>
-                        <div className='add-employee-formData'>
-                            <TextField
-                                label="Employee Name"
-                                fullWidth
-                                margin="normal"
-                                value={employeeName}
-                                onChange={(e) => setEmployeeName(e.target.value)}
-                            />
-                            <TextField
-                                label="Email"
-                                fullWidth
-                                margin="normal"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                            <TextField
-                                label="Skill Name"
-                                fullWidth
-                                margin="normal"
-                                value={skillName}
-                                onChange={(e) => setSkillName(e.target.value)}
-                            />
-                            <TextField
-                                label="Mobile Number"
-                                fullWidth
-                                margin="normal"
-                                value={mobileNumber}
-                                onChange={(e) => setMobileNumber(e.target.value)}
-                            />
-                            <FormControl fullWidth margin="normal">
-                                
-                                <Select
-                                    labelId="role-label"
-                                    value={role}
-                                    onChange={(e) => setRole(e.target.value)}
-                                >
-                                    <MenuItem value="technician">Technician</MenuItem>
-                                    <MenuItem value="siteAdmin">Site Admin</MenuItem>
-                                    <MenuItem value="superAdmin">Super Admin</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </div>
-                        <div className='add-employee-profile'>
-                            <Box sx={{ display: 'flex', alignItems: 'center', marginTop: 2 }}>
-                                <Avatar
-                                    alt="Profile Picture"
-                                    src={image as string}
-                                    sx={{ width: 128, height: 128, marginRight: 2 }}
-                                />
-                                <label htmlFor="photo-upload" style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-                                    <input
-                                        accept="image/*"
-                                        style={{ display: 'none' }}
-                                        id="photo-upload"
-                                        type="file"
-                                        onChange={handleImageChange}
-                                    />
-                                    <Button variant="outlined" component="span">
-                                        Upload Photo
-                                    </Button>
-                                    <Typography variant="caption" color="textSecondary">
-                                        128 × 128 recommended
-                                    </Typography>
-                                </label>
-                            </Box>
-                        </div>
-                    </div>
-                    <div className='add-employee-actions'>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 3 }}>
-                            <Button variant="outlined" onClick={handleClose}>
-                                Cancel
-                            </Button>
-                            <Button variant="contained" onClick={handleAddEmployee}>
-                                Add
-                            </Button>
-                        </Box>
-                    </div>
+                  Upload photo
                 </Box>
-            </div>
-        </Modal>
-    );
+                <Box
+                  sx={{
+                    typography: "caption",
+                    color: "#667085",
+                  }}
+                >
+                  160 × 160 recommended
+                </Box>
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+        <Box sx={{ display: "flex", columnGap: 2 }}>
+          <Button
+            variant="outlined"
+            onClick={handleClose}
+            sx={{
+              width: "100%",
+              color: "#344054",
+              border: "1px solid #D0D5DD",
+              borderRadius: "8px",
+              textTransform: "none",
+              height: "40px",
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            sx={{
+              width: "100%",
+              textTransform: "none",
+              borderRadius: "8px",
+              height: "40px",
+            }}
+          >
+            Add
+          </Button>
+        </Box>
+      </Box>
+    </BlurredDialog>
+  );
 };
 
-export default ServerModal;
+export default AddEmployeeModal;
