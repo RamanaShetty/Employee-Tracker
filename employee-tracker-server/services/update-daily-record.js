@@ -2,7 +2,8 @@ const dailyRecordModel = require('../models/dailyrecord');
 
 exports.updateDailyRecord = async (req, res) => {
     try {
-        const result = await dailyRecordModel.findByIdAndUpdate(req.params.dailyRecordId,
+        
+        const result = await dailyRecordModel.findByIdAndUpdate(req.params.dailyrecordId,
             req.body,
             { new: true, runValidators: true }
         )

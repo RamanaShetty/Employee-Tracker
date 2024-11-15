@@ -1,0 +1,32 @@
+[{
+  "_id": {
+    "$oid": "6724dc794f8a6c1cd0cfa35d"
+  },
+  "name": "Site Alpha",
+  "location": [
+    40.712776,
+    -74.005974
+  ],
+  "info": "Main construction site in New York City",
+  "siteAdmins": [
+    {
+      "$oid": "6720fb0264b0943fe57bc2cb"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6724dcb64f8a6c1cd0cfa361"
+  },
+  "name": "Site Bravo",
+  "location": [
+    34.052235,
+    -118.243683
+  ],
+  "info": "Secondary site in Los Angeles",
+  "siteAdmins": [
+    {
+      "$oid": "6720faec64b0943fe57bc2c9"
+    }
+  ]
+}]

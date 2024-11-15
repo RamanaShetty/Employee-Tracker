@@ -21,6 +21,11 @@ This is a full-stack application for tracking employee work activities. Follow t
 
    # Open a new terminal tab or window for the server
    cd ../employee-tracker-server && npm run start
+
+   # To access the application, use the following credentials:
+   Email: john.doe@example.com
+   Password: john123
+   Role: superadmin
    ```
 
 **Note: We have used MongoDB Compass instead of Atlas. So all the collections are exported and are available in the MongoSchema Folder**

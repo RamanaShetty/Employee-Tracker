@@ -1,9 +1,12 @@
+import "./imports.css";
+
 export const tableStyles = {
   minWidth: 650,
 };
 
 export const tableHeaderStyles = {
   padding: "18px 16px",
+  fontFamily: ["Inter", "sans-serif"].join(","),
   fontSize: "12px",
   fontWeight: "700",
   borderRight: "1px solid #ddd",
@@ -14,6 +17,7 @@ export const tableHeaderStyles = {
 };
 export const tableBodyStyles = {
   padding: "18px 16px",
+  fontFamily: ["Inter", "sans-serif"].join(","),
   fontSize: "14px",
   alignItems: "center",
   borderLeft: "1px solid #ddd",
@@ -79,10 +83,11 @@ export const tabStyles = {
   "&.Mui-selected": {
     color: "#667085",
     backgroundColor: "#f4f6f8",
-    fontWeight: "bold",
+    fontWeight: "400",
   },
   "&:not(.Mui-selected)": {
     backgroundColor: "#fff",
+    fontWeight: "400",
   },
   "&:not(:last-child)": {
     borderRight: "1px solid #D0D5DD",
@@ -93,7 +98,7 @@ export const searchContainerStyles = {
   display: "flex",
   alignItems: "center",
   border: "1px solid #ddd",
-  borderRadius: "4px",
+  borderRadius: "10px",
   padding: "4px 8px",
   backgroundColor: "#fff",
 };
@@ -109,7 +114,7 @@ export const searchInputStyles = {
 
 export const addButtonStyles = {
   border: "1px solid #D0D5DD",
-  borderRadius: "8px",
+  borderRadius: "10px",
   padding: "8px 16px",
   color: "#344054",
   fontSize: "14px",

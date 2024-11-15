@@ -1,0 +1,35 @@
+[{
+  "_id": {
+    "$oid": "6724dcfa4f8a6c1cd0cfa366"
+  },
+  "employeeId": {
+    "$oid": "6720fb1464b0943fe57bc2cd"
+  },
+  "siteId": {
+    "$oid": "6724dc794f8a6c1cd0cfa35d"
+  },
+  "checkin": [
+    {
+      "imageUrl": "https://example.com/checkin_photos/checkin_mike_1.jpg",
+      "location": [
+        40.712776,
+        -74.005974
+      ],
+      "timestamp": "2024-11-01T08:00:00Z"
+    }
+  ],
+  "checkout": [
+    {
+      "location": [
+        40.712776,
+        -74.005974
+      ],
+      "timestamp": "2024-11-01T16:00:00Z"
+    }
+  ],
+  "workAssigned": "Install HVAC system on the third floor",
+  "workStatus": "Pending",
+  "adminRemark": "Installation to be completed by next week",
+  "technicianRemark": "Awaiting final parts for completion",
+  "date": "2024-11-01"
+}]

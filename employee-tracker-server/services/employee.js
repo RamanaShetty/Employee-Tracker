@@ -15,10 +15,12 @@ module.exports.checkLogin = async (req, res) => {
       return res.status(400).json({ message: "Unsufficient data" });
     }
     const employee = await employeeModel.findOne({ email });
+    console.log(employee);
     if (!employee) {
       return res.status(401).json({ message: "Employee not found" });
     }
     // const result = await bcrypt.compare(password, employee.password);
+    console.log(employee);
     if (password === employee.password) {
       const payload = { role: employee.role };
       const token = jwt.sign(payload, process.env.JWT_SECRET);

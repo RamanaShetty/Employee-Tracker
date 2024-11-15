@@ -275,16 +275,15 @@ exports.removeSite = async (req, res) => {
 };
 
 exports.getAllDailyRecords = async (req, res) => {
-  try {
-    const results = await dailyRecordModel.find({});
-    // await setCheckinImagesIfExist(results);
-    res.status(200).json(results);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Server error. Could not fetch resources." });
-  }
-};
+    try {
+        const results = await dailyRecordModel.find({});
+        // await setCheckinImagesIfExist(results);
+        res.status(200).json(results);
+    }
+    catch(error) {
+        res.status(500).json({ message: "Server error. Could not fetch resources." });
+    }
+}
 
 exports.getTodayDailyRecords = async (req, res) => {
   try {
