@@ -10,6 +10,7 @@ import {
   styled,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import axios from "axios";
 
 interface AddEmployeeModalProps {
   open: boolean;
@@ -17,10 +18,11 @@ interface AddEmployeeModalProps {
 }
 
 interface EmployeeData {
-  name: string;
+  employeeName: string;
   skillName: string;
   mobileNumber: string;
-  photo: File | null;
+  email: string;
+  role: string;
 }
 
 const VisuallyHiddenInput = styled("input")`
@@ -75,16 +77,15 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
   handleClose,
 }) => {
   const [employeeData, setEmployeeData] = useState<EmployeeData>({
-    name: "",
+    employeeName: "",
     skillName: "",
     mobileNumber: "",
-    photo: null,
+    email: "",
+    role: "",
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [previewUrl, setPreviewUrl] = useState<string>("");
-
-  const onSubmit = (employees: EmployeeData) => {
-    console.log(employees);
-  };
+  const [base64, setBase64] = useState<string>("");
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -92,22 +93,61 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
       ...prev,
       [name]: value,
     }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
+  };
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+    if (!employeeData.employeeName.trim())
+      newErrors.employeeName = "Employee Name is required.";
+    if (!employeeData.skillName.trim())
+      newErrors.skillName = "Skill Name is required.";
+    if (!/^\d+$/.test(employeeData.mobileNumber))
+      newErrors.mobileNumber = "Mobile Number must contain only digits.";
+    if (employeeData.mobileNumber.trim().length < 10)
+      newErrors.mobileNumber = "Mobile Number must be at least 10 digits.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(employeeData.email.trim()))
+      newErrors.email = "Invalid email address.";
+    if (!employeeData.role.trim()) newErrors.role = "Role is required.";
+    if (!base64) newErrors.image = "Employee photo is required.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleReaderLoaded = (readerEvt: ProgressEvent<FileReader>) => {
+    const binaryStr = readerEvt.target?.result as string;
+    setBase64(btoa(binaryStr));
   };
 
   const handlePhotoUpload = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      setEmployeeData((prev) => ({
-        ...prev,
-        photo: file,
-      }));
+      const reader = new FileReader();
+      reader.onload = handleReaderLoaded;
+      reader.readAsArrayBuffer(file);
+
       setPreviewUrl(URL.createObjectURL(file));
+      setErrors((prev) => ({ ...prev, image: "" }));
     }
   };
 
   const handleSubmit = () => {
-    onSubmit(employeeData);
-    handleClose();
+    if (validateForm()) {
+      axios({
+        method: "post",
+        url: "http://localhost:4200/employee",
+        data: { ...employeeData, image: base64 },
+        headers: { "Content-Type": "application/json" },
+      })
+        .then((response) => {
+          alert("Success addition of employee");
+          window.location.reload();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   return (
@@ -120,112 +160,117 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
           rowGap: 2,
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-          }}
-        >
-          <DialogTitle sx={{ padding: 0, fontWeight: "600" }}>
-            Add Employee
-          </DialogTitle>
+        <DialogTitle sx={{ padding: 0, fontWeight: "600" }}>
+          Add Employee
+        </DialogTitle>
+        <Box sx={{ display: "flex", columnGap: 3 }}>
+          <Box sx={{ flex: 1 }}>
+            <TextField
+              fullWidth
+              name="employeeName"
+              label="Employee Name"
+              autoComplete="off"
+              value={employeeData.employeeName}
+              onChange={handleInputChange}
+              error={!!errors.employeeName}
+              helperText={errors.employeeName}
+              sx={{ marginBottom: "15px" }}
+            />
+            <TextField
+              fullWidth
+              name="skillName"
+              label="Skill Name"
+              autoComplete="off"
+              value={employeeData.skillName}
+              onChange={handleInputChange}
+              error={!!errors.skillName}
+              helperText={errors.skillName}
+              sx={{ marginBottom: "15px" }}
+            />
+            <TextField
+              fullWidth
+              name="mobileNumber"
+              label="Mobile Number"
+              autoComplete="off"
+              value={employeeData.mobileNumber}
+              onChange={handleInputChange}
+              error={!!errors.mobileNumber}
+              helperText={errors.mobileNumber}
+              sx={{ marginBottom: "15px" }}
+            />
+            <TextField
+              fullWidth
+              name="email"
+              label="Email"
+              autoComplete="off"
+              value={employeeData.email}
+              onChange={handleInputChange}
+              error={!!errors.email}
+              helperText={errors.email}
+              sx={{ marginBottom: "15px" }}
+            />
+            <TextField
+              fullWidth
+              name="role"
+              label="Role"
+              autoComplete="off"
+              value={employeeData.role}
+              onChange={handleInputChange}
+              error={!!errors.role}
+              helperText={errors.role}
+            />
+          </Box>
+
           <Box
             sx={{
               display: "flex",
-              columnGap: 3,
+              flexDirection: "column",
+              alignItems: "center",
+              minWidth: "160px",
             }}
           >
-            <Box sx={{ flex: 1 }}>
-              <TextField
-                fullWidth
-                name="name"
-                label="Employee Name"
-                autoComplete="none"
-                value={employeeData.name}
-                onChange={handleInputChange}
-                sx={{ marginBottom: "20px" }}
-              />
-              <TextField
-                fullWidth
-                name="skillName"
-                label="Skill Name"
-                autoComplete="none"
-                value={employeeData.skillName}
-                onChange={handleInputChange}
-                sx={{ marginBottom: "20px" }}
-              />
-              <TextField
-                fullWidth
-                name="mobileNumber"
-                label="Mobile Number"
-                autoComplete="none"
-                value={employeeData.mobileNumber}
-                onChange={handleInputChange}
-              />
-            </Box>
-
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                minWidth: "160px",
-              }}
-            >
-              <ImagePreviewBox>
-                {previewUrl ? (
-                  <img
-                    src={previewUrl}
-                    alt="Preview"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
+            <ImagePreviewBox>
+              {previewUrl ? (
+                <img
+                  src={previewUrl}
+                  alt="Preview"
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
+              ) : (
+                <IconButton
+                  component="label"
+                  sx={{ width: "48px", height: "48px" }}
+                >
+                  <CloudUploadIcon sx={{ width: "24px", height: "24px" }} />
+                  <VisuallyHiddenInput
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhotoUpload}
                   />
-                ) : (
-                  <IconButton
-                    component="label"
-                    sx={{
-                      width: "48px",
-                      height: "48px",
-                    }}
-                  >
-                    <CloudUploadIcon sx={{ width: "24px", height: "24px" }} />
-                    <VisuallyHiddenInput
-                      type="file"
-                      accept="image/*"
-                      onChange={handlePhotoUpload}
-                    />
-                  </IconButton>
-                )}
-              </ImagePreviewBox>
+                </IconButton>
+              )}
+            </ImagePreviewBox>
+            <Box sx={{ padding: "8px 12px", textAlign: "center" }}>
               <Box
                 sx={{
-                  padding: "8px 12px",
-                  textAlign: "center",
+                  typography: "caption",
+                  color: "#344054",
+                  fontWeight: 500,
+                  marginBottom: "4px",
                 }}
               >
-                <Box
-                  sx={{
-                    typography: "caption",
-                    color: "#344054",
-                    fontWeight: 500,
-                    marginBottom: "4px",
-                  }}
-                >
-                  Upload photo
-                </Box>
-                <Box
-                  sx={{
-                    typography: "caption",
-                    color: "#667085",
-                  }}
-                >
-                  160 × 160 recommended
-                </Box>
+                Upload photo
               </Box>
+              <Box sx={{ typography: "caption", color: "#667085" }}>
+                160 × 160 recommended
+              </Box>
+              {errors.image && (
+                <Box
+                  sx={{ color: "red", fontSize: "0.75rem", marginTop: "4px" }}
+                >
+                  {errors.image}
+                </Box>
+              )}
             </Box>
           </Box>
         </Box>

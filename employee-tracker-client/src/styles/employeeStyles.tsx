@@ -30,33 +30,6 @@ export const tableHeadStyles = {
   backgroundColor: "#f5f5f5",
 };
 
-export const statusStyles = {
-  completed: {
-    color: "#4E8729",
-    padding: "4px 8px",
-    borderRadius: "4px",
-    textAlign: "center",
-  },
-  pending: {
-    color: "#E92B0D",
-    padding: "4px 8px",
-    borderRadius: "4px",
-    textAlign: "center",
-  },
-  incomplete: {
-    color: "#A16207",
-    padding: "4px 8px",
-    borderRadius: "4px",
-    textAlign: "center",
-  },
-  onHold: {
-    color: "#1A1A1A",
-    padding: "4px 8px",
-    borderRadius: "4px",
-    textAlign: "center",
-  },
-};
-
 export const topNavStyles = {
   display: "flex",
   alignItems: "center",
@@ -77,7 +50,7 @@ export const tabStyles = {
   fontSize: "14px",
   fontWeight: "bold",
   minWidth: "auto",
-  padding: "8px 16px",
+  padding: "6px 14px",
   color: "#D0D5DD",
   textTransform: "none",
   "&.Mui-selected": {
@@ -87,7 +60,7 @@ export const tabStyles = {
   },
   "&:not(.Mui-selected)": {
     backgroundColor: "#fff",
-    fontWeight: "400",
+    fontWeight: "300",
   },
   "&:not(:last-child)": {
     borderRight: "1px solid #D0D5DD",
@@ -115,10 +88,10 @@ export const searchInputStyles = {
 export const addButtonStyles = {
   border: "1px solid #D0D5DD",
   borderRadius: "10px",
-  padding: "8px 16px",
+  padding: "6px 14px",
   color: "#344054",
   fontSize: "14px",
-  fontWeight: "bold",
+  fontWeight: "600",
   textTransform: "none",
   boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
   "&:hover": {
@@ -127,6 +100,6 @@ export const addButtonStyles = {
 };
 
 export const addButtonIconStyles = {
-  marginRight: "5px",
+  marginRight: "3px",
   fontSize: "18px",
 };
