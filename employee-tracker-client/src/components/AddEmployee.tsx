@@ -2,7 +2,6 @@ import React, { useState, ChangeEvent } from "react";
 import {
   Dialog,
   DialogTitle,
-  DialogContent,
   TextField,
   Button,
   Box,
@@ -11,6 +10,7 @@ import {
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import axios from "axios";
+import imageCompression from "browser-image-compression";
 
 interface AddEmployeeModalProps {
   open: boolean;
@@ -116,19 +116,36 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
   };
 
   const handleReaderLoaded = (readerEvt: ProgressEvent<FileReader>) => {
-    const binaryStr = readerEvt.target?.result as string;
-    setBase64(btoa(binaryStr));
+    const base64String = readerEvt.target?.result as string;
+    setBase64(base64String); // Directly set the Base64 string
   };
 
-  const handlePhotoUpload = (e: ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onload = handleReaderLoaded;
-      reader.readAsArrayBuffer(file);
 
-      setPreviewUrl(URL.createObjectURL(file));
-      setErrors((prev) => ({ ...prev, image: "" }));
+      // Compression options
+      const options = {
+        maxSizeMB: 0.2, // Compress the image to be below 200 KB
+        maxWidthOrHeight: 800, // Resize to smaller dimensions
+        useWebWorker: true,
+      };
+
+      try {
+        const compressedFile = await imageCompression(file, options);
+        const base64 = await imageCompression.getDataUrlFromFile(
+          compressedFile
+        );
+
+        console.log("Original size (KB):", file.size / 1024);
+        console.log("Compressed size (KB):", compressedFile.size / 1024);
+
+        setBase64(base64);
+        setPreviewUrl(URL.createObjectURL(compressedFile));
+        setErrors((prev) => ({ ...prev, image: "" }));
+      } catch (err) {
+        console.error("Error compressing image:", err);
+      }
     }
   };
 
@@ -137,7 +154,7 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
       axios({
         method: "post",
         url: "http://localhost:4200/employee",
-        data: { ...employeeData, image: base64 },
+        data: employeeData,
         headers: { "Content-Type": "application/json" },
       })
         .then((response) => {

@@ -90,8 +90,22 @@ exports.addSite = async (req, res) => {
 
 exports.getSites = async (req, res) => {
   try {
-    const result = await siteModel.find({});
-    res.status(200).json(result);
+    const result = await siteModel.find({}).populate({
+      path: "siteAdmins",
+      select: "name",
+    });
+
+    const formattedResult = result.map((site) => {
+      return {
+        _id: site._id,
+        name: site.name,
+        location: site.location,
+        info: site.info,
+        siteAdmins: site.siteAdmins.map((admin) => admin.name),
+      };
+    });
+
+    res.status(200).json(formattedResult);
   } catch (error) {
     res
       .status(500)
@@ -275,15 +289,16 @@ exports.removeSite = async (req, res) => {
 };
 
 exports.getAllDailyRecords = async (req, res) => {
-    try {
-        const results = await dailyRecordModel.find({});
-        // await setCheckinImagesIfExist(results);
-        res.status(200).json(results);
-    }
-    catch(error) {
-        res.status(500).json({ message: "Server error. Could not fetch resources." });
-    }
-}
+  try {
+    const results = await dailyRecordModel.find({});
+    // await setCheckinImagesIfExist(results);
+    res.status(200).json(results);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Server error. Could not fetch resources." });
+  }
+};
 
 exports.getTodayDailyRecords = async (req, res) => {
   try {

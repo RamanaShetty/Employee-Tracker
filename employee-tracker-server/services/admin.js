@@ -25,7 +25,7 @@ exports.getEmployees = async (req, res) => {
 exports.postEmployees = async (req, res) => {
   try {
     const { employeeName, email, mobileNumber, role, skillName } = req.body;
-    const profilePhoto = req.body.image; // Assuming image is sent as base64 string
+    // const profilePhoto = req.body.image; Assuming image is sent as base64 string
 
     // Validate required fields
     if (!employeeName || !email || !mobileNumber || !role || !skillName) {
@@ -50,7 +50,7 @@ exports.postEmployees = async (req, res) => {
       skill: skillName,
       status: "Incomplete",
       profilePhoto: {
-        imageUrl: profilePhoto, // Store base64-encoded image in the database
+        imageUrl: "profilePhoto", // Store base64-encoded image in the database
       },
       activeStatus: 1,
     });

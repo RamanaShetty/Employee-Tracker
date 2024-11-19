@@ -8,12 +8,11 @@ import {
 import Sidebar from "./components/Sidebar";
 import TopNavbar from "./components/TopNavbar";
 import Employees from "./pages/Employees";
-// import Sites from "./pages/Sites";
 import Login from "./pages/Login";
 import Assignwork from "./pages/Assignwork";
 import "./App.css";
 import Empsite from "./pages/empsite";
-import Sites from "./pages/Employees";
+import Sites from "./pages/Sites";
 
 const AppContent: React.FC = () => {
   const location = useLocation();
@@ -42,9 +41,6 @@ const App: React.FC = () => {
     <Router>
       <AppContent />
     </Router>
-    
-    
-   
   );
 };
 
