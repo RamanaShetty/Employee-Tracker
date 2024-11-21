@@ -49,9 +49,9 @@ exports.postEmployees = async (req, res) => {
       role: role,
       skill: skillName,
       status: "Incomplete",
-      profilePhoto: {
-        imageUrl: "profilePhoto", // Store base64-encoded image in the database
-      },
+      // profilePhoto: {
+      //   imageUrl: "profilePhoto", // Store base64-encoded image in the database
+      // },
       activeStatus: 1,
     });
 

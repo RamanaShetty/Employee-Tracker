@@ -109,16 +109,16 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(employeeData.email.trim()))
       newErrors.email = "Invalid email address.";
     if (!employeeData.role.trim()) newErrors.role = "Role is required.";
-    if (!base64) newErrors.image = "Employee photo is required.";
+    // if (!base64) newErrors.image = "Employee photo is required.";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleReaderLoaded = (readerEvt: ProgressEvent<FileReader>) => {
-    const base64String = readerEvt.target?.result as string;
-    setBase64(base64String); // Directly set the Base64 string
-  };
+  // const handleReaderLoaded = (readerEvt: ProgressEvent<FileReader>) => {
+  //   const base64String = readerEvt.target?.result as string;
+  //   setBase64(base64String); // Directly set the Base64 string
+  // };
 
   const handlePhotoUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
