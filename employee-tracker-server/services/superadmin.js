@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const employeeModel = require("../models/employee");
 const siteModel = require("../models/site");
 const dailyRecordModel = require("../models/dailyrecord");
+const workModel = require("../models/work");
 const logService = require("./log");
 
 exports.register = async (req, res) => {
@@ -335,6 +336,48 @@ exports.removeDailyRecord = async (req, res) => {
     }
   }
 };
+
+// Create "Work"
+exports.addWork = async (req, res) => {
+  try {
+    const work = req.body;
+    const newWork = await workModel.create(site)
+    await logService({
+      modifierId: req.cookies.employee_details.id,
+      siteId: newWork.siteId,
+      operation: "createWork",
+      message: `Created new work ${newWork.name}`
+    });
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        message: "Bad Request: Validation failed",
+        details: error.message,
+      });
+    } else if (error.code === 11000) {
+      return res.status(409).json({
+        message: "Conflict: Duplicate key error",
+        details: error.message,
+      });
+    } else {
+      res.status(500).json({
+        message: "Error occured while creating new work",
+        details: error.message,
+      })
+    }
+  }
+}
+
+// Read "Work"
+exports.getWorks = async (req, res) => {
+  try {
+    const result = await workModel.find({});
+    res.status(200).json(result)
+  } catch (error) {
+    res.status(500)
+    .json({message: "Server error. Could not fetch resources."})
+  }
+}
 
 const setCheckinImagesIfExist = async (results) => {
   const dailyRecords = await Promise.all(

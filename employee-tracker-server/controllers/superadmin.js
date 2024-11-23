@@ -99,4 +99,9 @@ router.get(
 );
 router.get("/log/date/:date", /*isAuth(admins) */ adminServices.getLogsByDate);
 
+
+// "Work" routes
+router.post("/work", /* isAuth(superAdmin) */ superAdminServices.addWork)
+router.get("/work", /* isAuth(superAdmin) */ superAdminServices.getWorks)
+
 module.exports = router;

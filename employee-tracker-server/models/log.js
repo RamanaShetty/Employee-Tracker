@@ -16,7 +16,7 @@ const logSchema = mongoose.Schema({
     },
     operation: {
         type: String,
-        enum: ["createdEmployee", "createdSite", "assignedWork", "addedAdmin", "deletedAdmin", "updatedSite"],
+        enum: ["createdEmployee", "createdSite", "assignedWork", "addedAdmin", "deletedAdmin", "updatedSite", "createWork"],
         requierd: true
     },
     message: {
