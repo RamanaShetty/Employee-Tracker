@@ -1,6 +1,7 @@
 const fs = require("fs").promises;
 const path = require("path");
 const bcrypt = require("bcrypt");
+const mongoose = require("mongoose");
 const employeeModel = require("../models/employee");
 const siteModel = require("../models/site");
 const dailyRecordModel = require("../models/dailyrecord");
@@ -65,16 +66,27 @@ exports.removeEmployee = async (req, res) => {
 };
 
 exports.addSite = async (req, res) => {
+  console.log(req.body);
   try {
-    const site = req.body;
+    const { name, location, info, siteAdmins } = req.body;
+
+    const site = {
+      name,
+      location,
+      info,
+      siteAdmins: [siteAdmins],
+    };
+
     const newSite = await siteModel.create(site);
+
     await logService({
-      modifierId: req.cookies.employee_details.id,
+      // modifierId: req.cookies.employee_details.id,
       siteId: newSite._id,
       operation: "createdSite",
       message: "Created new site",
     });
-    res.status(201).json({ message: "Site added successfully" });
+
+    res.status(201).json({ message: "Site added successfully", site: newSite });
   } catch (error) {
     if (error.name === "ValidationError") {
       res.status(400).json({
@@ -82,6 +94,7 @@ exports.addSite = async (req, res) => {
         details: error.message,
       });
     } else {
+      console.log(error);
       res
         .status(500)
         .json({ message: "Internal Server Error", details: error.message });

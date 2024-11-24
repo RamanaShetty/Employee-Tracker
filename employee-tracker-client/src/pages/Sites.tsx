@@ -31,7 +31,7 @@ import {
   addButtonIconStyles,
 } from "../styles/employeeStyles";
 
-import AddEmployeeModal from "../components/AddEmployee";
+import AddSiteModal from "../components/AddSiteModal";
 
 interface Sites {
   _id: String;
@@ -56,7 +56,6 @@ const Employees = () => {
       .then((response) => {
         if (Array.isArray(response.data)) {
           const allSites = response.data;
-          console.log(allSites);
           setSites(allSites);
         } else {
           console.error("Expected an array but received:", response.data);
@@ -163,7 +162,7 @@ const Employees = () => {
                     color: "#667085",
                   }}
                 >
-                  {"Madhapur, Hyderabad"}
+                  {site.location}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -195,7 +194,7 @@ const Employees = () => {
       </TableContainer>
 
       {/* Add Employee Modal */}
-      <AddEmployeeModal open={isModalOpen} handleClose={closeModal} />
+      <AddSiteModal open={isModalOpen} handleClose={closeModal} />
     </Box>
   );
 };
