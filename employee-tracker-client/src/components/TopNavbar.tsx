@@ -33,6 +33,12 @@ const TopNavbar: React.FC = () => {
         </li>
         <li>
           <Link
+            className={`topbar-link ${location.pathname === '/works' ? 'active-link' : ''}`}
+            to="/works"
+          >Works</Link>
+        </li>
+        <li>
+          <Link
             className={`topbar-link ${location.pathname === '/assign-work' ? 'active-link' : ''}`}
             to="/assign-work"
           >

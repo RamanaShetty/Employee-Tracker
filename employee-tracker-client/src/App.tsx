@@ -13,6 +13,7 @@ import Assignwork from "./pages/Assignwork";
 import "./App.css";
 import Empsite from "./pages/empsite";
 import Sites from "./pages/Sites";
+import Works from "./pages/Works";
 
 const AppContent: React.FC = () => {
   const location = useLocation();
@@ -29,6 +30,7 @@ const AppContent: React.FC = () => {
           <Route path="/employees" element={<Employees />} />
           <Route path="/sites" element={<Sites />} />
           <Route path="/assign-site" element={<Empsite />} />
+          <Route path="/works" element={<Works />} />
           <Route path="/assign-work" element={<Assignwork />} />
         </Routes>
       </div>

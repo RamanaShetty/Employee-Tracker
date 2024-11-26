@@ -6,6 +6,10 @@ const workSchema = mongoose.Schema({
         required: true,
         trim: true
     },
+    description: {
+        type: String,
+        required: true,
+    },
     siteId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Site',

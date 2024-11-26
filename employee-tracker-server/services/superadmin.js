@@ -384,8 +384,19 @@ exports.addWork = async (req, res) => {
 // Read "Work"
 exports.getWorks = async (req, res) => {
   try {
-    const result = await workModel.find({});
-    res.status(200).json(result)
+    const result = await workModel.find({}).populate({
+      path: 'siteId',
+      select: 'name -_id'
+    });
+
+    const formattedWork = result.map(work => ({
+      _id: work._id,
+      name: work.name,
+      description: work.description,
+      site: work.siteId ? work.siteId.name : "Unassigned"
+    }));
+
+    res.status(200).json(formattedWork)
   } catch (error) {
     res.status(500)
     .json({message: "Server error. Could not fetch resources."})
