@@ -12,7 +12,7 @@ const workSchema = mongoose.Schema({
     },
     siteId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Site',
+        ref: 'sites',
         required: true
     }
 })

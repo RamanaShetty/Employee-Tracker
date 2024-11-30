@@ -38,6 +38,8 @@ const employeeSchema = mongoose.Schema({
     imageUrl: {
       type: String,
       unique: true,
+      sparse: true,
+      default: null,
     },
   },
   activeStatus: {

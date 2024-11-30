@@ -354,7 +354,7 @@ exports.removeDailyRecord = async (req, res) => {
 exports.addWork = async (req, res) => {
   try {
     const work = req.body;
-    const newWork = await workModel.create(site)
+    const newWork = await workModel.create(work)
     await logService({
       modifierId: req.cookies.employee_details.id,
       siteId: newWork.siteId,
@@ -398,6 +398,7 @@ exports.getWorks = async (req, res) => {
 
     res.status(200).json(formattedWork)
   } catch (error) {
+    console.log(`Error in getWorks service: ${error.message}`)
     res.status(500)
     .json({message: "Server error. Could not fetch resources."})
   }

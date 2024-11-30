@@ -20,7 +20,7 @@ const Works = () => {
 
     useEffect(()=>{
         fetchWorks("http://localhost:4200/work");
-    })
+    },[])
 
     const fetchWorks = (endpoint: string) => {
         axios

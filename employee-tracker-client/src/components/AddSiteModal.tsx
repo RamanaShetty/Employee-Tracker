@@ -113,7 +113,6 @@ const AddSiteModal: React.FC<AddSiteModalProps> = ({ open, handleClose }) => {
         .catch((err) => {
           console.error("Error adding site:", err);
         });
-      // console.log(siteData);
     }
   };
 
