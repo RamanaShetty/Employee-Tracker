@@ -46,7 +46,14 @@ const employeeSchema = mongoose.Schema({
     type: Number,
     default: 1,
   },
-});
+  employeeId: {
+    type: String,
+    required: true,
+    unique: true, 
+  },
+},
+{ timestamps: true }
+);
 
 const employeeModel = mongoose.model("employees", employeeSchema);
 

@@ -1,4 +1,5 @@
 const { Router } = require("express");
+// const multer = require("multer");
 const superAdminServices = require("../services/superadmin");
 const adminServices = require("../services/admin");
 const dailyRecordService = require("../services/update-daily-record");
@@ -7,10 +8,11 @@ const router = Router({ strict: true });
 const isAuth = require("../middlewares/isAuth");
 const admins = ["siteAdmin", "superAdmin"];
 const superAdmin = ["superAdmin"];
+const uploadEmployee = require("../middlewares/employee-uploads");
 
 router.post("/register", /*isAuth(superAdmin)*/ superAdminServices.register);
 router.get("/employee", /*isAuth(admins) */ adminServices.getEmployees);
-router.post("/employee", adminServices.postEmployees);
+router.post("/employee", uploadEmployee.single("image"), adminServices.postEmployees);
 router.get(
   "/employee/role/:role",
   /*isAuth(admins) */ adminServices.getEmployeeByRole

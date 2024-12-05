@@ -7,6 +7,12 @@ const employeeModel = require("../models/employee");
 const siteModel = require("../models/site");
 const logService = require("./log");
 const logModel = require("../models/log");
+const { v4: uuidv4 } = require("uuid");
+const uploadEmployee = require("../middlewares/employee-uploads");
+const log = require("../models/log");
+const multer = require("multer");
+
+const upload = multer();
 
 exports.getEmployees = async (req, res) => {
   try {
@@ -15,6 +21,7 @@ exports.getEmployees = async (req, res) => {
       const { _id, name, email, mobile, role, skill, status } = result;
       return { _id, name, email, mobile, role, skill, status };
     });
+
     res.status(200).json(employees);
   } catch (error) {
     res
@@ -22,60 +29,55 @@ exports.getEmployees = async (req, res) => {
       .json({ message: "Server error. Could not fetch resources." });
   }
 };
-exports.postEmployees = async (req, res) => {
-  try {
-    const { employeeName, email, mobileNumber, role, skillName } = req.body;
-    // const profilePhoto = req.body.image; Assuming image is sent as base64 string
 
-    // Validate required fields
-    if (!employeeName || !email || !mobileNumber || !role || !skillName) {
-      return res
-        .status(400)
-        .json({ message: "Please fill in all required fields." });
-    }
+    exports.postEmployees = async (req, res) => {
+      try {
+        // Access uploaded file and text fields
+        const { file, body } = req;
 
-    // Check if email already exists
-    const existingEmployee = await employeeModel.findOne({ email });
-    if (existingEmployee) {
-      return res.status(400).json({ message: "Email already exists." });
-    }
+        console.log(body);
+        console.log(req.file);
+    
+        // Ensure file and necessary fields are provided
+        if (!file) {
+          return res.status(400).json({ message: "File upload is required." });
+        }
+        const { email, employeeName, mobileNumber, role, skillName } = body;
+    
+        // Check if an employee with the same email exists
+        const existingEmployee = await employeeModel.findOne({ email });
+        if (existingEmployee) {
+          return res.status(400).json({ message: "Email already exists." });
+        }
+    
+        // Save the new employee record
+        const newEmployee = new employeeModel({
+          name: employeeName,
+          email: email,
+          password: "123456", // Example password, replace with a secure one
+          mobile: mobileNumber,
+          role: role,
+          skill: skillName,
+          status: "Incomplete",
+          profilePhoto: {
+            imageUrl: `/uploads/employees/${req.generatedEmployeeId}/${file.filename}`,
+          },
+          activeStatus: 1,
+          employeeId: req.generatedEmployeeId,
+        });
+    
+        const savedEmployee = await newEmployee.save();
+    
+        return res.status(201).json({
+          message: "Employee created successfully.",
+          employee: savedEmployee,
+        });
+      } catch (error) {
+        console.error("Error in postEmployees:", error.message);
+        res.status(500).json({ message: "Internal server error." });
+      }
+    };
 
-    // Create a new employee document
-    const newEmployee = new employeeModel({
-      name: employeeName,
-      email: email,
-      password: "123456",
-      mobile: mobileNumber,
-      role: role,
-      skill: skillName,
-      status: "Incomplete",
-      // profilePhoto: {
-      //   imageUrl: "profilePhoto", // Store base64-encoded image in the database
-      // },
-      activeStatus: 1,
-    });
-
-    // Save the new employee to the database
-    const savedEmployee = await newEmployee.save();
-    res.status(201).json({
-      message: "Employee added successfully",
-      employee: {
-        _id: savedEmployee._id,
-        name: savedEmployee.name,
-        email: savedEmployee.email,
-        mobile: savedEmployee.mobile,
-        role: savedEmployee.role,
-        skill: savedEmployee.skill,
-        status: savedEmployee.status,
-        profilePhoto: savedEmployee.profilePhoto.imageUrl,
-      },
-    });
-    // res.status(201).send({ message: "Successs" });
-  } catch (error) {
-    console.error("Error adding employee:", error);
-    res.status(500).json({ message: "Server error. Could not add resources." });
-  }
-};
 exports.getEmployeeByRole = async (req, res) => {
   try {
     const results = await employeeModel.find(

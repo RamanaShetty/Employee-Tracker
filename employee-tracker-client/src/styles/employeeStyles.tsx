@@ -1,5 +1,6 @@
 import "./imports.css";
 
+
 export const tableStyles = {
   minWidth: 650,
 };
@@ -34,9 +35,11 @@ export const topNavStyles = {
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
-  padding: "16px",
-  backgroundColor: "#fff",
-  borderBottom: "1px solid #ddd",
+  paddingTop: "15px",
+  paddingBottom: "15px",
+  backgroundColor: "#FDFDFD",
+  // marginLeft: "10px"
+  // borderBottom: "1px solid #ddd",
 };
 
 export const tabsContainerStyles = {

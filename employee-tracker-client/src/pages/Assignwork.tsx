@@ -69,7 +69,7 @@ const useStyles = makeStyles({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: "16px",
+    padding: "16px 0",
     backgroundColor: "#fff",
     borderBottom: "1px solid #ddd",
   },

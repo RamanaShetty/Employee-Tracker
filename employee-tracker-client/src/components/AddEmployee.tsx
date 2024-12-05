@@ -1,14 +1,22 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent, useRef } from "react";
 import {
   Dialog,
   DialogTitle,
   TextField,
   Button,
   Box,
-  IconButton,
+  // IconButton,
   styled,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+  FormHelperText,
 } from "@mui/material";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { ProfileIcon } from "./Icons";
+import CloseIcon from "@mui/icons-material/Close";
+
 import axios from "axios";
 import imageCompression from "browser-image-compression";
 
@@ -23,24 +31,25 @@ interface EmployeeData {
   mobileNumber: string;
   email: string;
   role: string;
+  image: File | null;
 }
 
-const VisuallyHiddenInput = styled("input")`
-  clip: rect(0 0 0 0);
-  clip-path: inset(50%);
-  height: 1px;
-  overflow: hidden;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  white-space: nowrap;
-  width: 1px;
-`;
+// const VisuallyHiddenInput = styled("input")`
+//   clip: rect(0 0 0 0);
+//   clip-path: inset(50%);
+//   height: 1px;
+//   overflow: hidden;
+//   position: absolute;
+//   bottom: 0;
+//   left: 0;
+//   white-space: nowrap;
+//   width: 1px;
+// `;
 
 const ImagePreviewBox = styled(Box)`
-  width: 160px; // Increased width
-  height: 160px; // Increased height
-  border-radius: 8px;
+  width: 165px;
+  height: 165px;
+  border-radius: 10px 10px 0 0;
   overflow: hidden;
   background-color: #f0f0f0;
   display: flex;
@@ -82,10 +91,54 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
     mobileNumber: "",
     email: "",
     role: "",
+    image: null,
   });
+
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [previewUrl, setPreviewUrl] = useState<string>("");
-  const [base64, setBase64] = useState<string>("");
+  // const [base64, setBase64] = useState<string>("");
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handlePhotoUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+// console.log(typeof(file));
+
+      const options = {
+        maxSizeMB: 0.2, // Compress the image to be below 200 KB
+        maxWidthOrHeight: 800, // Resize to smaller dimensions
+        useWebWorker: true,
+      };
+
+      try {
+        const compressedBlob = await imageCompression(file, options);
+  
+        const compressedFile = new File([compressedBlob], file.name, { type: file.type });
+
+        setEmployeeData((prev) => ({
+          ...prev,
+          image: compressedFile,
+        }));
+
+        const preview = URL.createObjectURL(compressedFile);
+    
+        console.log("Original size (KB):", file.size / 1024);
+        console.log("Compressed size (KB):", compressedFile.size / 1024);
+
+        setPreviewUrl(preview);
+        setErrors((prev) => ({ ...prev, image: "" }));
+      } catch (err) {
+        console.error("Error compressing image:", err);
+      }
+    }
+  };
+
+  const triggerFileInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -94,6 +147,30 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
       [name]: value,
     }));
     setErrors((prev) => ({ ...prev, [name]: "" }));
+  };
+
+  const handleSelectChange = (event: SelectChangeEvent) => {
+    const { value } = event.target;
+
+    setEmployeeData((prev) => ({
+      ...prev,
+      role: value,
+    }));
+
+    setErrors((prev) => ({ ...prev, role: "" }));
+  };
+
+  const resetFormAndErrors = () => {
+    setPreviewUrl("");
+    setErrors({});
+    setEmployeeData({
+      employeeName: "",
+      skillName: "",
+      mobileNumber: "",
+      email: "",
+      role: "",
+      image: null,
+    });
   };
 
   const validateForm = () => {
@@ -109,7 +186,7 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(employeeData.email.trim()))
       newErrors.email = "Invalid email address.";
     if (!employeeData.role.trim()) newErrors.role = "Role is required.";
-    // if (!base64) newErrors.image = "Employee photo is required.";
+    if (!previewUrl) newErrors.image = "Employee photo is required.";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -120,44 +197,62 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
   //   setBase64(base64String); // Directly set the Base64 string
   // };
 
-  const handlePhotoUpload = async (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
+  // const handlePhotoUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files && e.target.files[0]) {
+  //     const file = e.target.files[0];
 
-      // Compression options
-      const options = {
-        maxSizeMB: 0.2, // Compress the image to be below 200 KB
-        maxWidthOrHeight: 800, // Resize to smaller dimensions
-        useWebWorker: true,
-      };
+  //     // Compression options
+  //     const options = {
+  //       maxSizeMB: 0.2, // Compress the image to be below 200 KB
+  //       maxWidthOrHeight: 800, // Resize to smaller dimensions
+  //       useWebWorker: true,
+  //     };
 
-      try {
-        const compressedFile = await imageCompression(file, options);
-        const base64 = await imageCompression.getDataUrlFromFile(
-          compressedFile
-        );
+  //     try {
+  //       const compressedFile = await imageCompression(file, options);
+  //       const base64 = await imageCompression.getDataUrlFromFile(
+  //         compressedFile
+  //       );
 
-        console.log("Original size (KB):", file.size / 1024);
-        console.log("Compressed size (KB):", compressedFile.size / 1024);
+  //       console.log("Original size (KB):", file.size / 1024);
+  //       console.log("Compressed size (KB):", compressedFile.size / 1024);
 
-        setBase64(base64);
-        setPreviewUrl(URL.createObjectURL(compressedFile));
-        setErrors((prev) => ({ ...prev, image: "" }));
-      } catch (err) {
-        console.error("Error compressing image:", err);
-      }
-    }
-  };
+  //       setBase64(base64);
+  //       setPreviewUrl(URL.createObjectURL(compressedFile));
+  //       setErrors((prev) => ({ ...prev, image: "" }));
+  //     } catch (err) {
+  //       console.error("Error compressing image:", err);
+  //     }
+  //   }
+  // };
 
   const handleSubmit = () => {
     if (validateForm()) {
+      const prepareFormData = (employeeData: EmployeeData) => {
+        const formData = new FormData();
+
+        (Object.keys(employeeData) as (keyof EmployeeData)[]).forEach((key) => {
+          const value = employeeData[key];
+
+          if (value !== undefined && value !== null && value !== "") {
+              formData.append(key, value);
+          }
+        });
+        return formData;
+      };
+      const formData = prepareFormData(employeeData);
+
+      for(const i of formData){
+        console.log(i)
+        }
+
       axios({
         method: "post",
         url: "http://localhost:4200/employee",
-        data: employeeData,
-        headers: { "Content-Type": "application/json" },
+        data: formData,
+        headers: {'Content-Type': 'multipart/form-data' },
       })
-        .then((response) => {
+        .then(() => {
           alert("Success addition of employee");
           window.location.reload();
         })
@@ -177,9 +272,19 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
           rowGap: 2,
         }}
       >
-        <DialogTitle sx={{ padding: 0, fontWeight: "600" }}>
-          Add Employee
-        </DialogTitle>
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <DialogTitle sx={{ padding: 0, fontWeight: "600" }}>
+            Add Employee
+          </DialogTitle>
+          <CloseIcon
+            onClick={() => {
+              resetFormAndErrors();
+              handleClose();
+            }}
+            sx={{ cursor: "pointer" }}
+          />
+        </Box>
+
         <Box sx={{ display: "flex", columnGap: 3 }}>
           <Box sx={{ flex: 1 }}>
             <TextField
@@ -226,16 +331,23 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
               helperText={errors.email}
               sx={{ marginBottom: "15px" }}
             />
-            <TextField
-              fullWidth
-              name="role"
-              label="Role"
-              autoComplete="off"
-              value={employeeData.role}
-              onChange={handleInputChange}
-              error={!!errors.role}
-              helperText={errors.role}
-            />
+            <FormControl fullWidth error={!!errors.role} variant="outlined">
+              <InputLabel id="demo-simple-select-label">Role</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={employeeData.role}
+                name="role"
+                onChange={handleSelectChange}
+                label="Role"
+              >
+                <MenuItem value="">Select Role</MenuItem>
+                <MenuItem value="technician">Technician</MenuItem>
+                <MenuItem value="superAdmin">Super Admin</MenuItem>
+                <MenuItem value="siteAdmin">Site Admin</MenuItem>
+              </Select>
+              <FormHelperText>{errors.role}</FormHelperText>
+            </FormControl>
           </Box>
 
           <Box
@@ -243,6 +355,9 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              border: "1px solid #D0D5DD",
+              borderRadius: "10px",
+              height: "250px",
               minWidth: "160px",
             }}
           >
@@ -251,30 +366,49 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
                 <img
                   src={previewUrl}
                   alt="Preview"
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "cover",
+                    objectFit: "cover",
+                  }}
                 />
               ) : (
-                <IconButton
-                  component="label"
-                  sx={{ width: "48px", height: "48px" }}
-                >
-                  <CloudUploadIcon sx={{ width: "24px", height: "24px" }} />
-                  <VisuallyHiddenInput
-                    type="file"
-                    accept="image/*"
-                    onChange={handlePhotoUpload}
-                  />
-                </IconButton>
+                <ProfileIcon />
+                // <IconButton
+                //   component="label"
+                //   sx={{ width: "48px", height: "48px" }}
+                // >
+                //   {/* <CloudUploadIcon sx={{ width: "24px", height: "24px" }} />
+                //    */}
+
+                //   <VisuallyHiddenInput
+                //     type="file"
+                //     accept="image/*"
+                //     onChange={handlePhotoUpload}
+                //   />
+                // </IconButton>
               )}
             </ImagePreviewBox>
-            <Box sx={{ padding: "8px 12px", textAlign: "center" }}>
+            <Box sx={{ padding: "8px 8px", textAlign: "center" }}>
+              <input
+                type="file"
+                name="image"
+                accept="image/*"
+                onChange={handlePhotoUpload}
+                ref={fileInputRef}
+                style={{ display: "none" }}
+              />
               <Box
                 sx={{
                   typography: "caption",
                   color: "#344054",
                   fontWeight: 500,
                   marginBottom: "4px",
+                  cursor: "pointer",
                 }}
+                onClick={triggerFileInput}
               >
                 Upload photo
               </Box>
@@ -291,10 +425,13 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
             </Box>
           </Box>
         </Box>
+
         <Box sx={{ display: "flex", columnGap: 2 }}>
           <Button
             variant="outlined"
-            onClick={handleClose}
+            onClick={() => {
+              resetFormAndErrors();
+            }}
             sx={{
               width: "100%",
               color: "#344054",
@@ -304,7 +441,7 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
               height: "40px",
             }}
           >
-            Cancel
+            Clear
           </Button>
           <Button
             variant="contained"

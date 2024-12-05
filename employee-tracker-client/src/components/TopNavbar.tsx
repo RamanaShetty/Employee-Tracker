@@ -7,7 +7,7 @@ const TopNavbar: React.FC = () => {
   return (
     <div className="top-navbar">
       <ul className="topbar-links">
-        <li>
+        <li style={{marginLeft: "-25px"}}>
           <Link
             className={`topbar-link ${location.pathname === '/employees' ? 'active-link' : ''}`}
             to="/employees"
