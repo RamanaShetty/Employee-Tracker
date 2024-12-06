@@ -53,6 +53,7 @@ const AddSiteModal: React.FC<AddSiteModalProps> = ({ open, handleClose }) => {
     info: "",
     location: "",
   });
+    
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [admins, setAdmins] = useState<{ id: string; name: string }[]>([]);
 

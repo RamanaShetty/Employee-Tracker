@@ -2,28 +2,31 @@ import React from "react";
 import { Card, Typography, Avatar, Box, IconButton } from "@mui/material";
 // import EditIcon from "@mui/icons-material/Edit";
 import PhoneIcon from "@mui/icons-material/Phone";
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import { EditIcon } from "./Icons";
 
 interface EmployeeCardProps {
   name: string;
   phone: string;
-  site: string;
+  // site: string;
   avatarUrl: string;
   skill: string;
+  email:string;
 }
 
 const EmployeeCard: React.FC<EmployeeCardProps> = ({
   name,
   phone,
-  site,
+  // site,
   avatarUrl,
   skill,
+  email,
 }) => {
   return (
     <Card
       sx={{
-        height: "220px",
-        width: "410px",
+        height: "210px",
+        width: "405px",
         padding: 2,
         borderRadius: "12px",
         fontFamily: ["Inter", "sans-serif"].join(","),
@@ -70,6 +73,17 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
           {phone}
         </Typography>
       </Box>
+      <Box sx={{ display: "flex", alignItems: "center", marginTop:"12px"}}>
+      <EmailOutlinedIcon sx={{ color: "#6B7280", fontSize: 20, marginRight: 1 }}/>
+      <Typography
+          sx={{
+            fontFamily: "inherit",
+            color: "#6B7280",
+          }}
+        >
+          {email}
+        </Typography>
+      </Box>
       <Box
         sx={{
           display: "flex",
@@ -78,7 +92,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
           flexDirection: "column",
         }}
       >
-        <Typography
+        {/* <Typography
           variant="subtitle2"
           sx={{
             color: "#6B7280",
@@ -88,7 +102,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
           }}
         >
           Current Site
-        </Typography>
+        </Typography> */}
         <Box
           sx={{
             display: "flex",
@@ -96,7 +110,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
             justifyContent: "space-between",
           }}
         >
-          <Typography
+          {/* <Typography
             variant="h6"
             sx={{
               color: "#026AA2",
@@ -106,7 +120,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
             }}
           >
             {site}
-          </Typography>
+          </Typography> */}
           <Box
             sx={{
               minWidth: "16px",
@@ -120,7 +134,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
                 fontFamily: "inherit",
                 fontSize: "16px",
                 // fontWeight: "500",
-                lineHeight: "20px",
+                lineHeight: "25px",
                 letterSpacing: "-0.03em",
                 textAlign: "center",
                 color: "#181e6599",

@@ -5,7 +5,8 @@ import EmployeeCard from "./Card";
 interface Employee {
     name: string;
     mobile: string;
-    site?: string; 
+    // site?: string; 
+    email:string;
     avatarUrl?: string; 
     role?:string;
     skill?:string;
@@ -38,7 +39,8 @@ return(
                 key={index}
                 name={employee.name}
                 phone={employee.mobile}
-                site={employee.site || "No site assigned"}
+                email = {employee.email}
+                // site={employee.site || "No site assigned"}
                 avatarUrl={employee.avatarUrl || ""} 
                 skill={employee.skill || "Carpenter"}       
                 />
