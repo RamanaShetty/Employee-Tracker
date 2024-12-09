@@ -384,16 +384,16 @@ exports.addWork = async (req, res) => {
 // Read "Work"
 exports.getWorks = async (req, res) => {
   try {
-    const result = await workModel.find({}).populate({
+    const result = await workModel.find({}).select('_id name description siteId').populate({
       path: 'siteId',
-      select: 'name -_id'
+      select: 'name _id'
     });
 
     const formattedWork = result.map(work => ({
       _id: work._id,
       name: work.name,
       description: work.description,
-      site: work.siteId ? work.siteId.name : "Unassigned"
+      site: work.siteId,
     }));
 
     res.status(200).json(formattedWork)

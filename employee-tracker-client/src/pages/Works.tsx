@@ -10,7 +10,10 @@ interface Work {
     _id: String,
     name: String,
     description: String,
-    site: String,
+    site: {
+        _id: String,
+        name: String
+    },
 }
 
 const Works = () => {
@@ -96,7 +99,7 @@ const Works = () => {
                             <TableRow key={index} >
                                 <TableCell sx={{ ...tableBodyStyles, textAlign: "center"}} >{ index + 1 }</TableCell>
                                 <TableCell sx={{ ...tableBodyStyles, fontWeight: "700", color: "#101828"}} >{ work.name }</TableCell>
-                                <TableCell sx={{ ...tableBodyStyles, fontWeight: "500", color: "#667085"}} >{ work.site }</TableCell>
+                                <TableCell sx={{ ...tableBodyStyles, fontWeight: "500", color: "#667085"}} >{ work.site.name }</TableCell>
                                 <TableCell sx={{ ...tableBodyStyles, fontWeight: "500", color: "#667085"}} >{ work.description }</TableCell>
                                 <TableCell
                     sx={{

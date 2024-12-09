@@ -24,7 +24,8 @@ const BlurredDialog = styled(Dialog)`
   }
 
   & .MuiInputBase-root {
-    height: 44px;
+    min-height: 44px;
+    max-height: 100px;
   }
 
   & .MuiInputLabel-root {

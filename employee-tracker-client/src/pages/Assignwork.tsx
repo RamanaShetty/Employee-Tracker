@@ -16,6 +16,8 @@ import {
   Tab,
   InputBase,
   Button,
+  MenuItem,
+  Select,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
@@ -169,6 +171,8 @@ interface EmployeesWithRemarks {
   skill: string;
   status: string;
   siteName: string;
+  siteId: string;
+  workAssigned: string;
   adminRemark: string;
   technicianRemark: string;
 }
@@ -201,6 +205,16 @@ interface Site {
   siteAdmins: string;
 }
 
+interface Work {
+  _id: String,
+  name: String,
+  description: String,
+  site: {
+      _id: String,
+      name: String
+  },
+}
+
 const Assignwork = () => {
   const classes = useStyles();
 
@@ -209,6 +223,7 @@ const Assignwork = () => {
   const [admins, setAdmins] = useState<Employee[]>([]);
   const [isTechnicians, setIsTechnicians] = useState(true);
   const [sites, setSite] = useState<Site[]>([]);
+  const [works, setWorks] = useState<Work[]>([]);
   const [mergedRecords, setMergedRecords] = useState<EmployeesWithRemarks[]>([]);
   // const [isEditFuction,setIsEditFuction]=useState(false);
   const [skillFilter, setSkillFilter] = useState("");
@@ -224,7 +239,7 @@ const Assignwork = () => {
     fetchEmployees("http://localhost:4200/employee");
     fetchDailyRecords("http://localhost:4200/dailyrecord/all");
     fetchSite("http://localhost:4200/site");
-
+    fetchWorks("http://localhost:4200/work");
   }, []);
   useEffect(() => {
     fetchDailyRecords("http://localhost:4200/dailyrecord/all");
@@ -232,7 +247,7 @@ const Assignwork = () => {
   }, [updated]);
   /* to combine the data for display*/
   useEffect(() => {
-    if (technicians.length && dailyRecordsData.length && sites.length) {
+    if (technicians.length && dailyRecordsData.length && sites.length && works.length) {
       let ids=1;
       const combinedData: EmployeesWithRemarks[] = dailyRecordsData
         .map((record) => {
@@ -245,7 +260,9 @@ const Assignwork = () => {
               name: employee.name,
               skill: employee.skill,
               status: employee.status,
+              workAssigned: record.workAssigned,
               siteName: site.name,
+              siteId: site._id,
               adminRemark: record.adminRemark,
               technicianRemark: record.technicianRemark,
             };
@@ -257,7 +274,7 @@ const Assignwork = () => {
 
       setMergedRecords(combinedData);
     }
-  }, [technicians, dailyRecordsData, sites]);
+  }, [technicians, dailyRecordsData, sites,  works]);
 
   const fetchEmployees = (endpoint: string) => {
     axios
@@ -288,6 +305,21 @@ const Assignwork = () => {
       });
   };
 
+  const fetchWorks = (endpoint: string) => {
+    axios.get(endpoint)
+    .then((response)=>{
+      if(Array.isArray(response.data)){
+        setWorks(response.data);
+      } else {
+        console.error("Expected an array but received: ", response.data);
+        setWorks([]);
+      }
+    })
+    .catch((error)=>{
+      console.error("Error message:", error.message);
+      setWorks([]);
+    })
+  }
   const fetchSite = (endpoint: string) => {
     axios
       .get(endpoint)
@@ -312,7 +344,6 @@ const Assignwork = () => {
       .then((response) => {
         if (Array.isArray(response.data)) {
           setDailyRecordsData(response.data);
-
         } else {
           console.error("Expected an array but received:", response.data);
           setDailyRecordsData([]);
@@ -481,6 +512,26 @@ const Assignwork = () => {
                 <TableCell className={classes.tableCell}>{record.name}</TableCell>
                 <TableCell className={classes.tableCell}>{record.skill}</TableCell>
                 <TableCell className={classes.tableCell}>{record.siteName}</TableCell>
+                <TableCell className={classes.tableCell}>
+                  <Select
+                    value={record.workAssigned? record.workAssigned : "Not Assigned"}
+                    // onChange={(event)=>{handleSiteChange(event, row.id, row._id)}}
+                    sx={{
+                      minWidth: '120px',
+                      height: '32px',
+                      fontSize: '0.875rem',
+                      '.MuiOutlinedInput-notchedOutline': { borderColor: '#E2E8F0' },
+                        '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#CBD5E1' },
+                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#2563EB' },
+                    }}
+                  >
+                    {works.map((work)=>{
+                      if(work.site._id === record.siteId){
+                        return <MenuItem value={record.siteName}>{record.siteName}</MenuItem>;
+                      }
+                    })}
+                  </Select>
+                </TableCell>
                 <TableCell className={classes.tableCell}> 
                   <DropDown dailyRecordsId={record.dailyRecordsId} /> 
                   </TableCell>
