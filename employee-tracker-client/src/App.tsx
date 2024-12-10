@@ -4,6 +4,7 @@ import {
   Routes,
   Route,
   useLocation,
+  Navigate,
 } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import TopNavbar from "./components/TopNavbar";
@@ -14,9 +15,12 @@ import "./App.css";
 import Empsite from "./pages/empsite";
 import Sites from "./pages/Sites";
 import Works from "./pages/Works";
+import { useAuth } from "./Contexts/authContext";
 
 const AppContent: React.FC = () => {
   const location = useLocation();
+  const { authUser } = useAuth();
+  const roles = ['superAdmin', 'siteAdmin']
 
   const isLoginPage = location.pathname === "/";
 
@@ -26,12 +30,12 @@ const AppContent: React.FC = () => {
       <div className="main-container">
         {!isLoginPage && <TopNavbar />}
         <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/employees" element={<Employees />} />
-          <Route path="/sites" element={<Sites />} />
-          <Route path="/assign-site" element={<Empsite />} />
-          <Route path="/works" element={<Works />} />
-          <Route path="/assign-work" element={<Assignwork />} />
+          <Route path="/" element={(authUser && roles.includes(authUser.role))?<Navigate to={"/employees"}/>:<Login />} />
+          <Route path="/employees" element={(authUser && roles.includes(authUser.role))?<Employees />:<Navigate to={"/"}/>} />
+          <Route path="/sites" element={(authUser && roles.includes(authUser.role))?<Sites />:<Navigate to={"/"}/>} />
+          <Route path="/assign-site" element={(authUser && roles.includes(authUser.role))?<Empsite />:<Navigate to={"/"}/>} />
+          <Route path="/works" element={(authUser && roles.includes(authUser.role))?<Works />:<Navigate to={"/"}/>} />
+          <Route path="/assign-work" element={(authUser && roles.includes(authUser.role))?<Assignwork />:<Navigate to={"/"}/>} />
         </Routes>
       </div>
     </div>

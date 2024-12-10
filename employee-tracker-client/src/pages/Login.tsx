@@ -2,17 +2,20 @@ import { useState, FormEvent } from "react";
 import { login } from "../services/authServices";
 import { useNavigate } from "react-router-dom";
 import "../styles/Login.css";
+import { useAuth } from "../Contexts/authContext";
 
 interface User {
   id: string;
+  name: string;
   role: string;
 }
 function Login() {
+  const { setAuthUser } = useAuth();
   const [password, setPassword] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [loginStatus, setLoginStatus] = useState<string>("");
-  const [role, setRole] = useState<"employee" | "superAdmin" | "siteAdmin">(
-    "employee"
+  const [role, setRole] = useState<"superAdmin" | "siteAdmin">(
+    "superAdmin"
   );
   const navigate = useNavigate();
 
@@ -22,12 +25,14 @@ function Login() {
       const user = await login(email, password, role);
       setLoginStatus("");
       if (user.status == 200) {
+        const currentUser:User = {id:user.data.id, name: user.data.name, role: user.data.role}
         setLoginStatus("LoggedIn successfully");
+        setAuthUser(currentUser);
         navigate("/employees");
       }
-    } catch (error) {
+    } catch (error:any) {
+      console.log(`Error while login: `, error.message);
       setLoginStatus(localStorage.getItem("loginStatus") || "Login failed");
-      console.error("Login failed", error);
     }
   };
 
@@ -61,16 +66,6 @@ function Login() {
 
             {/* User Type Selection */}
             <div className="role-selection">
-              <label>
-                <input
-                  className="radiogroup"
-                  type="radio"
-                  value="employee"
-                  checked={role === "employee"}
-                  onChange={() => setRole("employee")}
-                />
-                Employee
-              </label>
               <label>
                 <input
                   className="radiogroup"

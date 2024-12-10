@@ -108,6 +108,7 @@ form {
 }
 
 .role-selection {
+    gap: 10px;
     margin: 10px 0;
 }
 

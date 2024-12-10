@@ -47,7 +47,7 @@ const Employees = () => {
   const [searchQuery, setSearchQuery] = useState(""); // State for search input
 
   useEffect(() => {
-    fetchEmployees("http://localhost:4200/site");
+    fetchEmployees("http://localhost:4200/api/superadmin/site");
   }, []);
 
   const fetchEmployees = (endpoint: string) => {
