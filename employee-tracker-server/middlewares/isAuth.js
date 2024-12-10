@@ -8,6 +8,7 @@ module.exports = (roles = []) => {
                 return res.status(401).json({ message: "No authorization header" });
             }
             const authorization = employee_details.auth_token;
+            console.log(jwt.verify(authorization.split('bearer ')[1], process.env.JWT_SCRET));
             if (!authorization) {
                 return res.status(401).json({ message: "No authorization header" });
             }

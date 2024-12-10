@@ -10,27 +10,16 @@ const admins = ["siteAdmin", "superAdmin"];
 const superAdmin = ["superAdmin"];
 const uploadEmployee = require("../middlewares/employee-uploads");
 
-router.post("/register", /*isAuth(superAdmin)*/ superAdminServices.register);
-router.get("/employee", /*isAuth(admins) */ adminServices.getEmployees);
+router.post("/login", superAdminServices.login);
+router.post("/register", isAuth(superAdmin), superAdminServices.register);
+router.get("/employee", isAuth(superAdmin), adminServices.getEmployees);
 router.post("/employee", uploadEmployee.single("image"), adminServices.postEmployees);
-router.get(
-  "/employee/role/:role",
-  /*isAuth(admins) */ adminServices.getEmployeeByRole
-);
-router.get(
-  "/employee/status/:status",
-  /*isAuth(admins) */ adminServices.getEmployeeStatus
-);
-router.put(
-  "/employee/delete/:employeeId",
-  /*isAuth(admins) */ superAdminServices.removeEmployee
-);
+router.get("/employee/role/:role",/*isAuth(admins) */ adminServices.getEmployeeByRole);
+router.get("/employee/status/:status", /*isAuth(admins) */ adminServices.getEmployeeStatus);
+router.put("/employee/delete/:employeeId",/*isAuth(admins) */ superAdminServices.removeEmployee);
 router.post("/site", /*isAuth(superAdmin)*/ superAdminServices.addSite);
 router.get("/site", /*isAuth(superAdmin)*/ superAdminServices.getSites);
-router.get(
-  "/site/id/:siteId",
-  /*isAuth(admins) */ adminServices.getSiteBySiteId
-);
+router.get("/site/id/:siteId",/*isAuth(admins) */ adminServices.getSiteBySiteId);
 router.get(
   "/sites/admin/:employeeId",
   /*isAuth(admins) */ adminServices.getSitesBySiteAdminId
