@@ -4,6 +4,7 @@ const cors = require('cors');
 const bodyparser = require("body-parser");
 const cookieParser = require('cookie-parser');
 const configdb = require("./config/database");
+const { login, logout } = require('./services/AuthHandler');
 const app = express();
 
 
@@ -24,10 +25,12 @@ app.use(cookieParser());
 dotenv.config({path : './config/.env'})
 configdb();
 
-app.use('/api/superadmin',require('./controllers/superadmin'));
+app.use(require('./controllers/superadmin'));
 app.use(require('./controllers/employee'));
 app.use(require('./controllers/siteadmin'));
 app.use('/api',require('./services/verifyUser'));
+app.post('/api/login', login);
+app.get("/api/logout", logout);
 
 app.listen(4200,() => {
     console.log("server is running on port 4200");

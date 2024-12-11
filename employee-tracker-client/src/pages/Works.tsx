@@ -22,7 +22,7 @@ const Works = () => {
     const [ searchQuery, setSearchQuery ] = useState("");
 
     useEffect(()=>{
-        fetchWorks("http://localhost:4200/api/superadmin/work");
+        fetchWorks("http://localhost:4200/work");
     },[])
 
     const fetchWorks = (endpoint: string) => {

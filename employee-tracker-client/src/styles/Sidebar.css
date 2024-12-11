@@ -2,6 +2,7 @@
   width: 45px;
   height: 45px;
   border-radius: 50%;
+  object-fit: cover;
 }
 .logo-image {
   width: 70px;
@@ -74,4 +75,37 @@
   font-weight: bold;
   padding-bottom: 20px;
   border-bottom: 2px solid #12a0f4;
+}
+
+.profile-box{
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: 45px;
+  left: 60px;
+  padding: 8px 4px;
+  width: 200px;
+  height: 50px;
+  border: none;
+  box-sizing: border-box;
+  border-radius: 10px;
+  box-shadow: 2px 4px 16px grey;
+  background-color: #ffffff;
+}
+
+.profile-box button{
+  gap: 10px;
+  width: 100%;
+  border-radius: 8px;
+  height: 40px;
+  padding: 20px;
+  font-weight: 600;
+  font-size: medium;
+  text-transform: none;
+  color: black;
+}
+
+.profile-box button:hover{
+  color: red;
 }

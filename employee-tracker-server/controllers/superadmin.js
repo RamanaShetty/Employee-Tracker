@@ -10,9 +10,9 @@ const admins = ["siteAdmin", "superAdmin"];
 const superAdmin = ["superAdmin"];
 const uploadEmployee = require("../middlewares/employee-uploads");
 
-router.post("/login", superAdminServices.login);
+// router.post("/login", superAdminServices.login);
 router.post("/register", isAuth(superAdmin), superAdminServices.register);
-router.get("/employee", isAuth(superAdmin), adminServices.getEmployees);
+router.get("/employee", /*isAuth(superAdmin)*/ adminServices.getEmployees);
 router.post("/employee", uploadEmployee.single("image"), adminServices.postEmployees);
 router.get("/employee/role/:role",/*isAuth(admins) */ adminServices.getEmployeeByRole);
 router.get("/employee/status/:status", /*isAuth(admins) */ adminServices.getEmployeeStatus);

@@ -26,7 +26,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
     <Card
       sx={{
         height: "210px",
-        width: "405px",
+        width: "400px",
         padding: 2,
         borderRadius: "12px",
         fontFamily: ["Inter", "sans-serif"].join(","),

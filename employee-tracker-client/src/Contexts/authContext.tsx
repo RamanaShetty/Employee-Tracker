@@ -35,8 +35,8 @@ export const AuthContextProvider = ({children}:{children: ReactNode}) => {
                     setAuthUser({id: response.data.id, name: response.data.name, role: response.data.role })
                 }
             }
-            catch(error: any){
-                console.log(error.message);
+            catch(error){
+                console.log(error);
             }
         }
 

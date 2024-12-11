@@ -12,12 +12,12 @@ const jwt = require("jsonwebtoken");
 
 exports.login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
     console.log(email, password);
     if (!email || !password) {
       return res.status(400).json({ message: "Unsufficient data" });
     }
-    const employee = await employeeModel.findOne({ email });
+    const employee = await employeeModel.findOne({ email: email, role: role });
     console.log(employee);
     if (!employee) {
       return res.status(401).json({ message: "Employee not found" });

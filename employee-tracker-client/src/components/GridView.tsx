@@ -27,8 +27,9 @@ const GridView : React.FC<ViewsData> = ({
 return(
 <Box
         sx={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
+          display: "flex",
+          flexWrap: "wrap",
+          // gridTemplateColumns: "repeat(4, 1fr)",
           gap: 2, 
           background:"#fff",
           paddingTop: 3 ,

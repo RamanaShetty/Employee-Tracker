@@ -10,7 +10,7 @@ interface LoginResponse {
 export const login = async (email: string, password: string, role: string): Promise<any> => { // Change to any to capture the whole response
     try {
         console.log(`email: ${email} password: ${password} role: ${role}`);
-        const response = await axios.post<LoginResponse>(role=='superAdmin'?'http://localhost:4200/api/superadmin/login':'http://localhost:4200/login', { email, password, role },{withCredentials: true});
+        const response = await axios.post<LoginResponse>('http://localhost:4200/api/login',{ email, password, role },{withCredentials: true});
         console.log("Response code: " + response.status);
         
         if (response.data.id) {
@@ -32,6 +32,16 @@ export const getUserFromStorage = (): LoginResponse | null => {
     return userData ? JSON.parse(userData) as LoginResponse : null;
 };
 
-export const logout = (): void => {
-    localStorage.removeItem('user');
+export const logout = async (): Promise<any> => {
+    try {
+        const response = await axios.get('http://localhost:4200/api/logout', {withCredentials: true});
+        if(response.status == 200){
+            return true
+        }else{
+            return false
+        }
+    } catch (error: any) {
+        console.error('Login failed:', error.message);
+        return false
+    }
 };
