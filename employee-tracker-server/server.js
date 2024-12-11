@@ -29,8 +29,7 @@ app.use(require('./controllers/superadmin'));
 app.use(require('./controllers/employee'));
 app.use(require('./controllers/siteadmin'));
 app.use('/api',require('./services/verifyUser'));
-app.post('/api/login', login);
-app.get("/api/logout", logout);
+app.use(require('./controllers/authHandler'));
 
 app.listen(4200,() => {
     console.log("server is running on port 4200");
