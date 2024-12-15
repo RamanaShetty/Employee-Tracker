@@ -10,42 +10,42 @@ const logService = require("./log");
 const jwt = require("jsonwebtoken");
 
 
-exports.login = async (req, res) => {
-  try {
-    const { email, password, role } = req.body;
-    console.log(email, password);
-    if (!email || !password) {
-      return res.status(400).json({ message: "Unsufficient data" });
-    }
-    const employee = await employeeModel.findOne({ email: email, role: role });
-    console.log(employee);
-    if (!employee) {
-      return res.status(401).json({ message: "Employee not found" });
-    }
-    // const result = await bcrypt.compare(password, employee.password);
-    console.log(employee);
-    if(employee.role !== "superAdmin"){
-      return res.status(403).json({ message: "Employee Unauthorised" })
-    }
-    if (password === employee.password) {
-      const payload = { id: employee._id, role: employee.role };
-      const token = jwt.sign(payload, process.env.JWT_SECRET);
-      res
-        .status(200)
-        .cookie(
-          "employee_details",
-          { auth_token: `bearer ${token}` },
-          { maxAge: 9000000, httpOnly: true }
-        );
-      return res.status(200).json({ message: "LoggedIn successfully", id: employee._id, name: employee.name, role: employee.role});
-    } else {
-      return res.status(401).json({ message: "Invalid password" });
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Server side error" });
-  }
-};
+// exports.login = async (req, res) => {
+//   try {
+//     const { email, password, role } = req.body;
+//     console.log(email, password);
+//     if (!email || !password) {
+//       return res.status(400).json({ message: "Unsufficient data" });
+//     }
+//     const employee = await employeeModel.findOne({ email: email, role: role });
+//     console.log(employee);
+//     if (!employee) {
+//       return res.status(401).json({ message: "Employee not found" });
+//     }
+//     // const result = await bcrypt.compare(password, employee.password);
+//     console.log(employee);
+//     if(employee.role !== "superAdmin"){
+//       return res.status(403).json({ message: "Employee Unauthorised" })
+//     }
+//     if (password === employee.password) {
+//       const payload = { id: employee._id, role: employee.role };
+//       const token = jwt.sign(payload, process.env.JWT_SECRET);
+//       res
+//         .status(200)
+//         .cookie(
+//           "employee_details",
+//           { auth_token: `bearer ${token}` },
+//           { maxAge: 9000000, httpOnly: true }
+//         );
+//       return res.status(200).json({ message: "LoggedIn successfully", id: employee._id, name: employee.name, role: employee.role});
+//     } else {
+//       return res.status(401).json({ message: "Invalid password" });
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     return res.status(500).json({ message: "Server side error" });
+//   }
+// };
 
 exports.register = async (req, res) => {
   const employee = req.body;
@@ -396,11 +396,11 @@ exports.addWork = async (req, res) => {
     const newWork = await workModel.create(work)
     await logService({
       modifierId: req.cookies.employee_details.id,
-      siteId: newWork.siteId,
       operation: "createWork",
       message: `Created new work ${newWork.name}`
     });
   } catch (error) {
+    console.log(error);
     if (error.name === "ValidationError") {
       return res.status(400).json({
         message: "Bad Request: Validation failed",
@@ -423,25 +423,69 @@ exports.addWork = async (req, res) => {
 // Read "Work"
 exports.getWorks = async (req, res) => {
   try {
-    const result = await workModel.find({}).select('_id name description siteId').populate({
-      path: 'siteId',
-      select: 'name _id'
-    });
+    const result = await workModel.find({})
 
-    const formattedWork = result.map(work => ({
-      _id: work._id,
-      name: work.name,
-      description: work.description,
-      site: work.siteId,
-    }));
-
-    res.status(200).json(formattedWork)
+    res.status(200).json(result)
   } catch (error) {
     console.log(`Error in getWorks service: ${error.message}`)
     res.status(500)
     .json({message: "Server error. Could not fetch resources."})
   }
 }
+
+// Delete Work
+exports.deleteWorkById = async (req, res) => {
+  try{
+    const id = req.params.id;
+    const work = await workModel.findOne({_id: id});
+    if(work){
+      await workModel.deleteOne({_id: id});
+      res.status(200).json("Work Deleted successfully");
+    }else{
+      res.status(404).json("The requested work canot be found.");
+    }
+  }catch(error){
+    console.log("Error in deleteWorkById function: ", error.message);
+    res.status(500).json("Internal server error.");
+  }
+}
+
+// Update Work
+exports.updateWork = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, description } = req.body;
+
+    if (!name || !description) {
+      return res.status(400).json({ message: "Both name and description are required." });
+    }
+    const updatedWork = await workModel.findByIdAndUpdate(
+      id,
+      { name, description },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedWork) {
+      return res.status(404).json({ message: "Work not found." });
+    }
+    res.status(200).json({ message: "Work updated successfully.", work: updatedWork });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error. Please try again later." });
+  }
+};
+
+// Read all Assigned Tasks
+exports.getAssignedTasks = async (req, res) => {
+  try{
+    const response = await employeeModel.find({role: 'technician'}).select('assignedworks');
+    res.status(200).json(response);
+  }catch(error){
+    console.warn("Error in AssignedTask service of superAdmin: ",error.message);
+    res.status(500).json({message: "Internal server error"})
+  }
+}
+
 
 const setCheckinImagesIfExist = async (results) => {
   const dailyRecords = await Promise.all(

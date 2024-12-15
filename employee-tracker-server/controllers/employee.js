@@ -7,6 +7,7 @@ const isAuth = require('../middlewares/isAuth');
 const allowRoles = ["technician", "siteAdmin", "superAdmin"];
 
 employeeRouter.post('/login', employeeServices.checkLogin);
+employeeRouter.get('/assignedtasks/:employeeId', employeeServices.getAssignedTaskById);
 employeeRouter.put('/employee/profile/:employeeId',/* isAuth(allowRoles)*/uploadEmployeeProfile.single('photo'), employeeServices.updateProfileImage);
 employeeRouter.delete('/employee/profile/:employeeId', /* isAuth(allowRoles)*/ employeeServices.deleteProfileImage);
 employeeRouter.get('/employee/:employeeId',/* isAuth(allowRoles)*/employeeServices.getEmployeeById);

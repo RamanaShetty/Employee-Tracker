@@ -427,6 +427,33 @@ exports.getTodayDailyRecordsByEmployeeId = async (req, res) => {
   }
 };
 
+// Function to get Employee's assigned tasks
+exports.getAssignedTaskById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const employee = await employeeModel.findById(id)
+      .select("assignedworks")
+      .populate({
+        path: "assignedworks.siteId",
+        select: "_id name",
+      })
+      .populate({
+        path: "assignedworks.works.id",
+        select: "_id name description",
+      });
+
+
+    if (!employee) {
+      return res.status(404).json({ error: "Employee not found" });
+    }
+
+    res.status(200).json(employee.assignedworks);
+  } catch (error) {
+    console.error("Error fetching assigned works:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 const setCheckinImagesIfExist = async (results) => {
   const dailyRecords = await Promise.all(
     results.map(async (result) => {

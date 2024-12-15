@@ -16,10 +16,17 @@ const upload = multer();
 
 exports.getEmployees = async (req, res) => {
   try {
-    const results = await employeeModel.find({ activeStatus: 1 });
+    const results = await employeeModel.find({ activeStatus: 1 }).populate({
+      path: "assignedworks.siteId",
+      select: "_id name location info",
+    })
+    .populate({
+      path: "assignedworks.works.id",
+      select: "_id name description",
+    });
     const employees = results.map((result) => {
-      const { _id, name, email, mobile, role, skill, status } = result;
-      return { _id, name, email, mobile, role, skill, status };
+      const { _id, name, email, mobile, role, skill, status, assignedworks } = result;
+      return { _id, name, email, mobile, role, skill, status, assignedworks };
     });
 
     res.status(200).json(employees);

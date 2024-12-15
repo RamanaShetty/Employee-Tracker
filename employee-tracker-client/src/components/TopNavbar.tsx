@@ -25,32 +25,32 @@ const TopNavbar: React.FC = () => {
         </li>
         <li>
           <Link
-            className={`topbar-link ${location.pathname === '/assign-site' ? 'active-link' : ''}`}
-            to="/assign-site"
-          >
-            Assign Site
-          </Link>
-        </li>
-        <li>
-          <Link
             className={`topbar-link ${location.pathname === '/works' ? 'active-link' : ''}`}
             to="/works"
           >Works</Link>
         </li>
         <li>
           <Link
-            className={`topbar-link ${location.pathname === '/assign-work' ? 'active-link' : ''}`}
-            to="/assign-work"
+            className={`topbar-link ${location.pathname === '/assign' ? 'active-link' : ''}`}
+            to="/assign"
           >
-            Assign Work
+            Assign
           </Link>
         </li>
+        {/* <li>
+          <Link
+            className={`topbar-link ${location.pathname === '/remarks' ? 'active-link' : ''}`}
+            to="/remarks"
+          >
+            Remarks
+          </Link>
+        </li> */}
         <li>
           <Link
-            className={`topbar-link ${location.pathname === '/report' ? 'active-link' : ''}`}
-            to="/report"
+            className={`topbar-link ${location.pathname === '/reports' ? 'active-link' : ''}`}
+            to="/reports"
           >
-            Report
+            Reports
           </Link>
         </li>
       </ul>

@@ -10,11 +10,6 @@ const workSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    siteId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'sites',
-        required: true
-    }
 })
 
 const WorkModel = mongoose.model("Works", workSchema)

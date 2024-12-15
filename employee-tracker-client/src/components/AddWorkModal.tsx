@@ -10,7 +10,7 @@ interface AddWorkModalProps {
 interface WorkData {
     name: string,
     description: string,
-    siteId: string,
+    // siteId: string,
 }
 
 const BlurredDialog = styled(Dialog)`
@@ -41,36 +41,8 @@ const AddWorkModal: React.FC<AddWorkModalProps> = ({ open, handleClose }) => {
     const [ workData, setWorkData ] = useState<WorkData>({
         name: "",
         description: "",
-        siteId: "",
     })
     const [ errors, setErrors ] = useState<Record<string, string>>({});
-    const [ sites, setSites ] = useState<{ id: string, name: String }[]>([])
-
-    useEffect(() => {
-        fetchSites("http://localhost:4200/site");
-      }, []);
-    
-      const fetchSites = (endpoint: string) => {
-        axios
-          .get(endpoint)
-          .then((response) => {
-            if (Array.isArray(response.data)) {
-              const allSites = response.data
-                .map((site: {_id: string; name: string}) => ({
-                    id: site._id,
-                    name: site.name,
-                }))
-              setSites(allSites);
-            } else {
-              console.error("Expected an array but received:", response.data);
-              setSites([]);
-            }
-          })
-          .catch((error) => {
-            console.error("Error fetching employees:", error);
-            setSites([]);
-          });
-      };
 
       const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -85,29 +57,27 @@ const AddWorkModal: React.FC<AddWorkModalProps> = ({ open, handleClose }) => {
         const newErrors: Record<string, string> = {};
         if(!workData.name.trim()) newErrors.name = "Work name is required";
         if(!workData.description.trim()) newErrors.description = "Work description is requried";
-        if(!workData.siteId.trim()) newErrors.siteId = "Select a site";
+        // if(!workData.siteId.trim()) newErrors.siteId = "Select a site";
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
       }
 
-      const handleSubmit = () => {
-        if (validateWorkForm()) {
-          axios({
-            method: "post",
-            url: "http://localhost:4200/work",
-            data: workData,
-            headers: { "Content-Type": "application/json" },
-          })
-            .then(() => {
-              alert("Work added successfully");
-              window.location.reload();
-            })
-            .catch((err) => {
-              console.error("Error adding work:", err);
+      const handleSubmit = async () => {
+        try{
+          if (validateWorkForm()) {
+            const response = await axios({
+              method: "post",
+              url: "http://localhost:4200/work",
+              data: workData,
+              headers: { "Content-Type": "application/json" },
+              withCredentials: true,
             });
+            handleClose();
+        }} catch(err){
+          console.error("Error adding work:", err);
         }
-      };
+      }
     return (
         <BlurredDialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
             <Box
@@ -140,29 +110,6 @@ const AddWorkModal: React.FC<AddWorkModalProps> = ({ open, handleClose }) => {
                   helperText={errors.description}
                   sx={{ marginBottom: "15px" }}
                 />
-
-                <TextField
-                    fullWidth
-                    name="siteId"
-                    label="Site"
-                    select
-                    value={workData.siteId}
-                    onChange={(e) => {
-                      setWorkData((prev) => ({
-                        ...prev,
-                        siteId: e.target.value,
-                      }));
-                    }}
-                    error={!!errors.siteId}
-                    helperText={errors.siteId}
-                    sx={{ marginBottom: "15px" }}
-                >     
-                    {sites.map((site) => (
-                      <MenuItem key={site.id} value={site.id}>
-                        {site.name}
-                      </MenuItem>
-                    ))}
-                </TextField>
                 </Box>
                 <Box sx={{ display: "flex", columnGap: 2 }}>
                   <Button
@@ -181,7 +128,7 @@ const AddWorkModal: React.FC<AddWorkModalProps> = ({ open, handleClose }) => {
                   </Button>
                   <Button
                     variant="contained"
-                    onClick={handleSubmit}
+                    onClick={()=>{handleSubmit()}}
                     sx={{
                       width: "100%",
                       textTransform: "none",

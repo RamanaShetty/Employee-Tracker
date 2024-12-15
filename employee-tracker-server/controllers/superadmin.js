@@ -9,6 +9,8 @@ const isAuth = require("../middlewares/isAuth");
 const admins = ["siteAdmin", "superAdmin"];
 const superAdmin = ["superAdmin"];
 const uploadEmployee = require("../middlewares/employee-uploads");
+const assignService = require("../services/assignServiceHandler");
+const { route } = require("./employee");
 
 // router.post("/login", superAdminServices.login);
 router.post("/register", isAuth(superAdmin), superAdminServices.register);
@@ -94,5 +96,15 @@ router.get("/log/date/:date", /*isAuth(admins) */ adminServices.getLogsByDate);
 // "Work" routes
 router.post("/work", /* isAuth(superAdmin) */ superAdminServices.addWork)
 router.get("/work", /* isAuth(superAdmin) */ superAdminServices.getWorks)
+router.delete("/work/:id", /* isAuth(superAdmin) */ superAdminServices.deleteWorkById);
+router.patch("/work/:id", /* isAuth(superAdmin) */ superAdminServices.updateWork);
+router.get('/assignedtasks', superAdminServices.getAssignedTasks);
+
+// assign routes
+router.post("/assignedworks/:employeeId", /* isAuth(superAdmin) */ assignService.assignSite);
+router.get("/assignedworks/:employeeId", /* isAuth(superAdmin) */ assignService.getassignedtasksbyId);
+router.delete("/assignedworks/:employeeId/:siteId", /* isAuth(superAdmin) */ assignService.unAssignSite);
+router.put("/assignedworks/:employeeId/:siteId/works", /* isAuth(superAdmin) */ assignService.updateAssignedWork);
+
 
 module.exports = router;

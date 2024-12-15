@@ -29,11 +29,11 @@ const employeeSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  status: {
-    type: String,
-    enum: ["Incomplete", "Completed", "Pending", "onHold"],
-    default: "Incomplete",
-  },
+  // status: {
+  //   type: String,
+  //   enum: ["Incomplete", "Completed", "Pending", "onHold"],
+  //   default: "Incomplete",
+  // },
   profilePhoto: {
     imageUrl: {
       type: String,
@@ -51,6 +51,33 @@ const employeeSchema = mongoose.Schema({
     required: true,
     unique: true, 
   },
+  assignedworks: [
+    {
+      siteId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "sites",
+        default: null,
+      },
+      works: [
+        {
+          id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Works",
+            default: null,
+          },
+          assignDate: {
+            type: String,
+            default: () => Date.now()
+          },
+          status: {
+            type: String,
+            enum: ["Incomplete", "Completed", "Pending", "onHold"],
+            default: "Incomplete"
+          }
+        }
+      ]
+    }
+  ]
 },
 { timestamps: true }
 );

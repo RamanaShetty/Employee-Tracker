@@ -14,7 +14,7 @@ app.use(express.urlencoded({ limit: "10mb", extended: true }));
 app.use(cors({
     origin: ['http://localhost:5173','*'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    methods: ["GET","POST","PUT","PATCH"],
+    methods: ["GET","POST","PUT","PATCH", "DELETE"],
     credentials: true
 }));
 app.use(bodyparser.urlencoded({extended : true}));

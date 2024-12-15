@@ -1,0 +1,23 @@
+.chart-box{
+    display: "flex";
+    flex-direction: column;
+    height: 100%;
+    flex: 50%;
+}
+
+.chart-heading{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: x-large;
+    height: 100px;
+    font-weight: bold;
+}
+
+.chart{
+    height: max-content;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
