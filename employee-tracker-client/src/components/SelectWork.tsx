@@ -8,9 +8,10 @@ import WorkCheckList from "./WorkCheckList";
 
 
 interface Work {
-  _id: string;
+  id: {_id: string;
   name: string;
   description: string;
+  }
 }
 
 interface Site {
@@ -73,7 +74,7 @@ const SelectWork: React.FC<{ employee_id: string, assignedTasks: AssignedWork[],
         {assignedTasks.length > 0 && assignedTasks.map((site) => (
           <MenuItem
             key={site.siteId._id}
-            onMouseEnter={(event) => { event.stopPropagation(); handleSubMenuOpen(event, site.siteId) }}
+            onMouseEnter={(event) => { console.log(site); event.stopPropagation(); handleSubMenuOpen(event, site.siteId) }}
             onMouseLeave={handleSubMenuClose}
           >
             {site.siteId.name}
@@ -85,7 +86,7 @@ const SelectWork: React.FC<{ employee_id: string, assignedTasks: AssignedWork[],
               anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
               transformOrigin={{ vertical: 'top', horizontal: 'left' }}
             >
-              <WorkCheckList worksSelected={site.works.map((work)=>work._id)} employee_id={employee_id} siteId={site.siteId._id} key={site.siteId._id}/>
+              <WorkCheckList worksSelected={site.works.map((work)=>work.id._id)} employee_id={employee_id} siteId={site.siteId._id} key={site.siteId._id}/>
               {/* <Box sx={{ display: "flex", flexDirection: "column" }}>
                 {works && works.map((work) => (
                   <Box key={work._id} sx={{ padding: "5px", display: "flex", justifyContent: "left", alignItems: "center", width: "100%" }}>

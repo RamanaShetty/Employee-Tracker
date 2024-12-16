@@ -13,6 +13,7 @@ const WorkCheckList: React.FC<{ worksSelected: string[], employee_id: string, si
     const [selectedWorks, setSelectedWorks] = useState<string[]>(worksSelected);
 
     useEffect(() => {
+        setSelectedWorks(worksSelected);
         fetchWorks();
     }, [])
 
@@ -22,13 +23,14 @@ const WorkCheckList: React.FC<{ worksSelected: string[], employee_id: string, si
             const data = {
                 workId: id,
                 action: "add",
-                date: date
+                date: date,
+                siteId: siteId
             }
             try {
                 // console.log(employee_id);
                 await axios({
                     method: "PUT",
-                    url: `http://localhost:4200/assignedworks/${employee_id}/${siteId}/works`,
+                    url: `http://localhost:4200/assignedworks/${employee_id}/works`,
                     data: data,
                     withCredentials: true
                 });
@@ -42,12 +44,13 @@ const WorkCheckList: React.FC<{ worksSelected: string[], employee_id: string, si
             const data = {
                 workId: id,
                 action: "delete",
-                date: date
+                date: date,
+                siteId: siteId
             }
             try {
                 await axios({
                     method: "PUT",
-                    url: `http://localhost:4200/assignedworks/${employee_id}/${siteId}/works`,
+                    url: `http://localhost:4200/assignedworks/${employee_id}/works`,
                     data: data,
                     withCredentials: true
                 });

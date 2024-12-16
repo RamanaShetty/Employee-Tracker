@@ -104,7 +104,7 @@ router.get('/assignedtasks', superAdminServices.getAssignedTasks);
 router.post("/assignedworks/:employeeId", /* isAuth(superAdmin) */ assignService.assignSite);
 router.get("/assignedworks/:employeeId", /* isAuth(superAdmin) */ assignService.getassignedtasksbyId);
 router.delete("/assignedworks/:employeeId/:siteId", /* isAuth(superAdmin) */ assignService.unAssignSite);
-router.put("/assignedworks/:employeeId/:siteId/works", /* isAuth(superAdmin) */ assignService.updateAssignedWork);
+router.put("/assignedworks/:employeeId/works", /* isAuth(superAdmin) */ assignService.updateAssignedWork);
 
 
 module.exports = router;

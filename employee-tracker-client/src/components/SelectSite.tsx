@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import SiteCheckList from "./SiteCheckList";
 
 interface Work {
-  _id: string;
+  id: {_id: string;
   name: string;
-  description: string;
+  description: string;}
 }
 
 interface Site {

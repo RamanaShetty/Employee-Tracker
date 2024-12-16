@@ -25,9 +25,9 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs, { Dayjs } from "dayjs";
 
 interface Work {
-  _id: string;
+  id: {_id: string;
   name: string;
-  description: string;
+  description: string;}
 }
 
 interface assignSite {
@@ -94,11 +94,9 @@ export default function Empsite() {
   }, []);
 
   const fetchEmployees = async () => {
-    console.log("fetching Employees")
     try {
       setLoading(true);
       const response = await axios.get('http://localhost:4200/employee');
-      console.log(response.data);
       if (response.data && response.data.length > 0) {
         const transformedData = response.data.map((employee: any, index: number) => ({
           id: index + 1,
@@ -183,10 +181,11 @@ export default function Empsite() {
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <div style={{ display: "flex", justifyContent: "center" }}>
             <DatePicker
-              label="Pick a Date"
+              label="Assigning Date"
               value={selectedDate}
               onChange={(newValue: Dayjs | null) => setSelectedDate(newValue)}
-              renderInput={(params) => <TextField {...params} />}
+              format='DD/MM/YYYY'
+              // renderInput={(params) => <TextField {...params} />}
             />
           </div>
         </LocalizationProvider>

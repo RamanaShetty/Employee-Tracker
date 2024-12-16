@@ -46,11 +46,11 @@ const employeeSchema = mongoose.Schema({
     type: Number,
     default: 1,
   },
-  employeeId: {
-    type: String,
-    required: true,
-    unique: true, 
-  },
+  // employeeId: {
+  //   type: String,
+  //   required: true,
+  //   unique: true, 
+  // },
   assignedworks: [
     {
       siteId: {
