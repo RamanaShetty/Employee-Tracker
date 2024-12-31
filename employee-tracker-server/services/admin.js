@@ -106,7 +106,7 @@ exports.updateEmployeeDetails = async (req, res) =>{
 exports.deleteEmployee = async(req, res)=>{
   console.log("hhh")
   try {
-    console.log(req)
+    // console.log(req)
     const id = req.params.id
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid employee ID" });
