@@ -23,10 +23,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  /* margin: 1px 10px 1px 10px; */
   background-color: #fff;
   border-radius: 6px;
-  padding: 5px;
+  /* padding: 5px; */
 }
 .sidebar-option {
   width: 30px;
@@ -58,8 +57,7 @@
 .topbar-link {
   text-decoration: none;
   color: #737373;
-  padding-right: 10px;
-  padding-bottom: 20px;
+  padding:10px 10px 10px 0 ;
 }
 .top-navbar {
   display: flex;

@@ -16,9 +16,20 @@ const { route } = require("./employee");
 router.post("/register", isAuth(superAdmin), superAdminServices.register);
 router.get("/employee", /*isAuth(superAdmin)*/ adminServices.getEmployees);
 router.post("/employee", uploadEmployee.single("image"), adminServices.postEmployees);
-router.get("/employee/role/:role",/*isAuth(admins) */ adminServices.getEmployeeByRole);
-router.get("/employee/status/:status", /*isAuth(admins) */ adminServices.getEmployeeStatus);
-router.put("/employee/delete/:employeeId",/*isAuth(admins) */ superAdminServices.removeEmployee);
+router.put("/employee/:id", adminServices.updateEmployeeDetails)
+router.delete("/employee/:id",adminServices.deleteEmployee)
+router.get(
+  "/employee/role/:role",
+  /*isAuth(admins) */ adminServices.getEmployeeByRole
+);
+router.get(
+  "/employee/status/:status",
+  /*isAuth(admins) */ adminServices.getEmployeeStatus
+);
+router.put(
+  "/employee/delete/:employeeId",
+  /*isAuth(admins) */ superAdminServices.removeEmployee
+);
 router.post("/site", /*isAuth(superAdmin)*/ superAdminServices.addSite);
 router.get("/site", /*isAuth(superAdmin)*/ superAdminServices.getSites);
 router.get("/site/id/:siteId",/*isAuth(admins) */ adminServices.getSiteBySiteId);

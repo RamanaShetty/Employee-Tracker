@@ -46,8 +46,7 @@ const storage = multer.diskStorage({
 
   filename: (req, file, cb) => {
     try {
-      const extension = path.extname(file.originalname);
-      const fileName = `${req.generatedEmployeeId}${extension}`;
+      const fileName = `${file.originalname}`;
       req.filename = fileName;
       cb(null, fileName);
     } catch (error) {

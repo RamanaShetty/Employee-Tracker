@@ -132,6 +132,22 @@ const Employees = () => {
   const closeModal = (): void => {
     setIsModalOpen(false);
   };
+  
+  const handleDelete = (id: string) => {
+    axios
+      .delete(`http://localhost:4200/employee/${id}`)
+      .then(() => {
+        if (isTechnicians) {
+          setTechnicians((prev) => prev.filter((emp) => emp._id !== id));
+        } else {
+          setAdmins((prev) => prev.filter((emp) => emp._id !== id));
+        }
+      })
+      .catch((error) => {
+        console.error("Error deleting employee:", error);
+      });
+  };
+  
 
   const filteredTechnicians = technicians.filter((emp) =>
     emp.skill.toLowerCase().includes(skillFilter.toLowerCase())
@@ -310,7 +326,8 @@ const Employees = () => {
         <GridView
           isTechnicians={isTechnicians}
           filteredTechnician={filteredTechnicians}
-          filteredAdmins={filteredAdmins}
+          filteredAdmins={filteredAdmins} 
+          onDelete={handleDelete}        
         />
       ) : (
         <ListView

@@ -2,10 +2,13 @@
   box-sizing: border-box;
 }
 
-.app {
+.outerContainer{
   display: flex;
   background-color: #f0f0f0;
 }
+/* .app {
+  background-color: #f0f0f0;
+} */
 .main-container {
   flex-grow: 1;
   padding: 5px 15px;
@@ -13,7 +16,6 @@
   margin: 10px 10px 0px 10px;
   border-radius: 10px;
 }
-
 
 .navbar-title {
   font-size: 24px;

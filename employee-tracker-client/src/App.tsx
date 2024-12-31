@@ -26,9 +26,11 @@ const AppContent: React.FC = () => {
   const isLoginPage = location.pathname === "/";
 
   return (
+    <div className="outerContainer">
     <div className="app">
       {!isLoginPage && <Sidebar />}
-      <div className="main-container">
+    </div>
+    <div className="main-container">
         {!isLoginPage && <TopNavbar />}
         <Routes>
           <Route path="/" element={(authUser && roles.includes(authUser.role))?<Navigate to={"/employees"}/>:<Login />} />

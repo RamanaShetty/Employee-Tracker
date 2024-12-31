@@ -25,8 +25,12 @@ exports.getEmployees = async (req, res) => {
       select: "_id name description",
     });
     const employees = results.map((result) => {
-      const { _id, name, email, mobile, role, skill, status, assignedworks } = result;
-      return { _id, name, email, mobile, role, skill, status, assignedworks };
+      const { _id, name, email, mobile, role, skill, status, employeeId, profilePhoto } = result;
+
+      const baseUrl = `${req.protocol}://${req.get('host')}`;
+      let imageUrl = profilePhoto?.imageUrl ? `${baseUrl}${profilePhoto.imageUrl}` : null;
+        imageUrl = imageUrl.replace('/uploads', '');
+      return { _id, name, email, mobile, role, skill, status, employeeId, profilePhoto: imageUrl };
     });
 
     res.status(200).json(employees);
@@ -84,6 +88,42 @@ exports.getEmployees = async (req, res) => {
         res.status(500).json({ message: "Internal server error." });
       }
     };
+
+exports.updateEmployeeDetails = async (req, res) =>{
+  try {
+    const id = req.params.id
+    const userExist = await employeeModel.findOne({employeeId: id})
+    if(!userExist){
+      return res.status(404).json({message: "User doesn't exist"})
+    }
+    const updateUserDetails = await employeeModel.findByIdAndUpdate(id, req.body, {new:true})
+    res.status(200).json(updateUserDetails)
+  } catch (error) {
+    res.status(500).json({error : "Internal server error"})
+  }
+}
+
+exports.deleteEmployee = async(req, res)=>{
+  console.log("hhh")
+  try {
+    console.log(req)
+    const id = req.params.id
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid employee ID" });
+    }
+
+    // Attempt to delete the employee
+    const deletedEmployee = await employeeModel.findByIdAndDelete(id);
+    if (!deletedEmployee) {
+      return res.status(404).json({ message: "User doesn't exist" });
+    }
+
+    res.status(200).json({ message: "Employee deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting employee:", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
 
 exports.getEmployeeByRole = async (req, res) => {
   try {

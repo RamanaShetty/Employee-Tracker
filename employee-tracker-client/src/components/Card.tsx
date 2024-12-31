@@ -2,26 +2,42 @@ import React from "react";
 import { Card, Typography, Avatar, Box, IconButton } from "@mui/material";
 // import EditIcon from "@mui/icons-material/Edit";
 import PhoneIcon from "@mui/icons-material/Phone";
-import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
+import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import { EditIcon } from "./Icons";
+import DeleteBox from "./deleteConfirmationBox";
 
 interface EmployeeCardProps {
+  _id:string;
   name: string;
   phone: string;
   // site: string;
   avatarUrl: string;
   skill: string;
-  email:string;
+  email: string;
+  onDelete: (id: string) => void;
 }
 
 const EmployeeCard: React.FC<EmployeeCardProps> = ({
+  _id,
   name,
   phone,
   // site,
   avatarUrl,
   skill,
   email,
+  onDelete,
 }) => {
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+
+  const handleOpen = () => setIsModalOpen(true);
+  const handleClose = () => setIsModalOpen(false);
+
+  const handleDelete = () => {
+    onDelete(_id);
+    handleClose();
+  }
+
   return (
     <Card
       sx={{
@@ -53,7 +69,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
         </Typography>
 
         <Avatar
-          src={avatarUrl}
+          src={avatarUrl || undefined}
           alt={name}
           sx={{
             width: 40,
@@ -62,7 +78,9 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
             marginRight: 1,
             marginTop: "5px",
           }}
-        />
+        >
+          {!avatarUrl && name && name[0].toUpperCase()}
+        </Avatar>
       </Box>
       <Box sx={{ display: "flex", alignItems: "center", marginTop: 1 }}>
         <PhoneIcon sx={{ color: "#6B7280", fontSize: 20, marginRight: 1 }} />
@@ -73,9 +91,11 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
           {phone}
         </Typography>
       </Box>
-      <Box sx={{ display: "flex", alignItems: "center", marginTop:"12px"}}>
-      <EmailOutlinedIcon sx={{ color: "#6B7280", fontSize: 20, marginRight: 1 }}/>
-      <Typography
+      <Box sx={{ display: "flex", alignItems: "center", marginTop: "12px" }}>
+        <EmailOutlinedIcon
+          sx={{ color: "#6B7280", fontSize: 20, marginRight: 1 }}
+        />
+        <Typography
           sx={{
             fontFamily: "inherit",
             color: "#6B7280",
@@ -143,9 +163,17 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
               {skill}
             </Typography>
           </Box>
-          <IconButton sx={{ float: "right", marginRight: 1 }}>
-            <EditIcon />
-          </IconButton>
+          <Box sx={{ float: "right" }}>
+            <IconButton sx={{ padding: "5px" }}>
+              <EditIcon />
+            </IconButton>
+            <>
+              <IconButton sx={{ padding: "5px" }} onClick={handleOpen}>
+                <DeleteOutlinedIcon />
+              </IconButton>
+              <DeleteBox open={isModalOpen} handleDelete={handleDelete} handleClose={handleClose} />
+            </>
+          </Box>
         </Box>
       </Box>
     </Card>

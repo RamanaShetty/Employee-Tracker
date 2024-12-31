@@ -4,9 +4,8 @@ const cors = require('cors');
 const bodyparser = require("body-parser");
 const cookieParser = require('cookie-parser');
 const configdb = require("./config/database");
-const { login, logout } = require('./services/AuthHandler');
+const path = require("path")
 const app = express();
-
 
 app.use(express.json({ limit: "10mb" })); 
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
@@ -17,13 +16,14 @@ app.use(cors({
     methods: ["GET","POST","PUT","PATCH", "DELETE"],
     credentials: true
 }));
+
 app.use(bodyparser.urlencoded({extended : true}));
 app.use(cookieParser());
 
-
-
 dotenv.config({path : './config/.env'})
 configdb();
+
+app.use(express.static("uploads"));
 
 app.use(require('./controllers/superadmin'));
 app.use(require('./controllers/employee'));
